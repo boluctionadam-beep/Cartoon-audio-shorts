@@ -215,7 +215,7 @@ def set_battlements(variant="normal", light="golden", knife=False, drips=False):
 # ================================================================== CUTAWAY (cross-section of the wall + chute)
 def set_cutaway(light="night", labels=False):
     S, SD = wall_mats("normal")
-    CUTF = noisy("cutface", (0.62, 0.58, 0.50), (0.74, 0.70, 0.62), 1.5, bump=0.25)
+    CUTF = stone("cutface", base=(0.74, 0.70, 0.62), scale=0.75, row=0.5, width=1.0, var=0.8, mortar=(0.35, 0.32, 0.28), bump=0.6)
     w = box((0, 2.0, 7), (10, 4, 14), CUTF, 0.0, "wall")                   # front face y=0 is the cut
     shaft = box((0, 0.6, 5.5), (1.3, 2.2, 9.2), None)                      # chute: z 0.9..10.1
     cut(w, shaft)
@@ -236,7 +236,8 @@ def set_cutaway(light="night", labels=False):
     point("moat", (-5.5, 0, -0.5))
     # torch in the room (warm) + night
     if light == "night":
-        sky("night"); point_light((0.9, 0.6, 11.6), 90, (1.0, 0.55, 0.25), 0.2); point_light((0, -2, 3), 60, (0.5, 0.6, 1.0), 1.0)
+        sky("night"); point_light((0.9, 0.6, 11.6), 420, (1.0, 0.55, 0.25), 0.2); point_light((0, 0.9, 9.4), 160, (1.0, 0.6, 0.3), 0.3)
+        point_light((0, -3, 4), 220, (0.45, 0.55, 1.0), 2.0); point_light((-2, 0.9, 1.5), 60, (0.4, 0.6, 1.0), 0.5)
         f = flat("flame", (1.0, 0.6, 0.2), 0.9, emit=20); sphere((1.1, 1.6, 11.8), 0.12, f, (1, 1, 1.6), sub=2)
     else:
         sky("day"); area_light((0, -8, 8), (0, 1, 6), 900, 8, (1, 0.98, 0.95))
