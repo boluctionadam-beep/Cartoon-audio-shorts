@@ -13,6 +13,10 @@ Outputs:
 Usage:
   python3 tools/tts.py "Text here." -o work/voice
   python3 tools/tts.py --file work/script.txt -o work/voice --voice "am_michael:0.5,am_adam:0.5" --speed 1.1
+Delivery tags at the start of a sentence (combine freely):
+  [slow] / [fast]      that sentence at 0.85x / 1.15x of --speed  ([speed=0.9] for an exact factor)
+  [pause] / [pause=1]  extra dramatic silence before the sentence (default 0.6 s)
+Reactions come from punctuation and interjections: "Huh?" "Nope." "Wait... what?" "Boom!"
 Install once: pip install kokoro-onnx soundfile   (model files ~350 MB are downloaded on first run)
 """
 import argparse, json, os, re, sys, urllib.request
@@ -61,7 +65,7 @@ def main():
     ap.add_argument("--file")
     ap.add_argument("-o", "--out", default="work/voice")
     ap.add_argument("--voice", default="am_michael:0.5,am_adam:0.5")
-    ap.add_argument("--speed", type=float, default=1.1)
+    ap.add_argument("--speed", type=float, default=1.1)  # user choice
     ap.add_argument("--pause", type=float, default=0.22, help="silence between sentences, s")
     ap.add_argument("--lead", type=float, default=0.05, help="silence before the first word, s")
     ap.add_argument("--models", default=os.path.expanduser("~/.cache/kokoro"))
@@ -77,7 +81,16 @@ def main():
     sr = 24000; out = [np.zeros(int(a.lead * sr), np.float32)]; t = a.lead
     phrases, words = [], []
     for i, s in enumerate(sents):
-        audio, sr = k.create(s, voice=style, speed=a.speed, lang="en-us")
+        f, extra = 1.0, 0.0
+        for tag, val in re.findall(r"\[(slow|fast|speed|pause)(?:=([\d.]+))?\]", s):
+            if tag == "slow": f *= 0.85
+            elif tag == "fast": f *= 1.15
+            elif tag == "speed": f *= float(val)
+            elif tag == "pause": extra += float(val) if val else 0.6
+        s = re.sub(r"\[[a-z]+(?:=[\d.]+)?\]\s*", "", s).strip()
+        if extra and i > 0:
+            out.append(np.zeros(int(extra * sr), np.float32)); t += extra
+        audio, sr = k.create(s, voice=style, speed=a.speed * f, lang="en-us")
         audio = trim(audio.astype(np.float32), sr)
         d = len(audio) / sr
         phrases.append({"text": s, "s": round(t, 3), "e": round(t + d, 3)})
