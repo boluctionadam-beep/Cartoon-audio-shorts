@@ -257,6 +257,9 @@ class Shot:
 
 def render_segment(args):
     proj, sh, W, H, fps, out, words = args
+    if os.environ.get("REUSE") and os.path.exists(out) and sh["id"] not in os.environ.get("REDO", "").split(","):
+        d = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", out], capture_output=True, text=True).stdout)
+        return out, round(d * fps) / fps
     S = Shot(proj, sh, W, H, fps, words); n = int(round(S.dur * fps))
     p = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(fps), "-i", "-",
                           "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", out], stdin=subprocess.PIPE)

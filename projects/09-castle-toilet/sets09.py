@@ -263,7 +263,7 @@ def set_cutaway(light="night", labels=False):
     plane((-12, 0, -0.6), (16, 30), water("moat2", (0.10, 0.28, 0.30)))
     G = noisy("grass_c", (0.14, 0.34, 0.08), (0.40, 0.56, 0.14), 0.3)
     box((-14, 4, -1.5), (14, 30, 1.6), G); box((14, 6, -0.5), (18, 26, 1.0), noisy("earth", (0.22, 0.18, 0.10), (0.32, 0.26, 0.15), 0.6))
-    box((-20, 2.0, 7), (0.1, 0.1, 0.1), None)
+    box((0.5, -9.0, -0.5), (9.2, 18.0, 1.0), noisy("earth2", (0.20, 0.30, 0.10), (0.34, 0.46, 0.16), 0.5))   # ground in front of the wall
     point("moat", (-5.5, 0, -0.5))
     # torch in the room (warm) + night
     if light == "night":
