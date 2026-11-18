@@ -253,7 +253,9 @@ def _crown(c, hat, hx, hy, r, k, tilt):
 
 # ------------------------------------------------------------------ body + pose
 def draw_full(spec, path, expr="neutral", pose="stand", look=(0, 0), tilt=None, w=1000, h=1800):
-    c = Canvas(w, h, ss=4, seed=7, light=(-0.75, -0.65))
+    low = spec.get("detail") == "low"
+    c = Canvas(w, h, ss=2 if low else 4, seed=7, light=(-0.75, -0.65))
+    c.no_pattern = low                       # crowd/extras: flat clothes and hair, no textures
     B = spec["body"]; bw_t, bw_b, bh = B["w_top"], B["w_bot"], B["h"]; legs = spec.get("legs", 500)
     r = spec["head"].get("r", 225); off = spec.get("head_offset", 50)
     ground = h - 210; feet_y = ground
@@ -314,7 +316,35 @@ def draw_full(spec, path, expr="neutral", pose="stand", look=(0, 0), tilt=None, 
     else:
         arm_to(sR, (sR[0] + 70, sR[1] + 160), (sR[0] + 60, sR[1] + 330))
     draw_head(c, spec, hx, hy, 1.0, expr, tilt if tilt is not None else spec.get("tilt", -0.08), look)
+    if low:                                  # small card is enough for the background
+        c.im.resize((w // 2, h // 2), Image.LANCZOS).save(path); return path
     return c.save(path)
+
+
+# ------------------------------------------------------------------ crowds / extras (simplified on purpose)
+def extra_spec(seed, colors, hats=("kettle", "cap", "none", "coif"), hair_cols=((96, 60, 34, 255), (60, 40, 28, 255), (210, 170, 90, 255), (140, 70, 30, 255))):
+    """Background extra: same style grammar, low detail. Built from a few templates with random swaps so
+    a crowd never looks like clones. colors = the faction's muted palette (never a hero's unique colour)."""
+    g = random.Random(seed)
+    hat = g.choice(hats); hair = g.choice(("curly", "bowl", "spiky", "bald"))
+    if hat == "coif": hair = "none"            # mail hood covers the hair
+    build = g.choice(((240, 280, 540, 470), (300, 340, 520, 420), (210, 230, 600, 540), (330, 370, 500, 380)))
+    return dict(name=f"extra{seed}", detail="low", head=dict(r=g.uniform(200, 235), squash=g.uniform(0.92, 1.08), seed=seed),
+                head_offset=g.choice((-45, -30, 30, 50)), tilt=g.uniform(-0.1, 0.1), legs=build[3], limb=28, arm=24,
+                hair=dict(type=hair, color=g.choice(hair_cols)), hat=dict(type=hat),
+                facial_hair=dict(type=g.choice(("none", "none", "mustache", "stubble")), color=(70, 46, 30, 255)),
+                body=dict(w_top=build[0], w_bot=build[1], h=build[2], color=g.choice(colors), rot=g.uniform(-0.1, 0.1)))
+
+
+def crowd_cards(n, out_dir, colors, expr_mix=("laughing", "smug", "laughing", "neutral"), pose_mix=("stand", "arms_up", "hips", "stand"), seed0=100, **kw):
+    """Render n extra cards (one shared crowd emotion with small variations). Returns the file list."""
+    import os
+    os.makedirs(out_dir, exist_ok=True); g = random.Random(seed0); files = []
+    for i in range(n):
+        sp = extra_spec(seed0 + i, colors, **kw)
+        p = os.path.join(out_dir, f"extra_{seed0 + i:03d}.png")
+        draw_full(sp, p, g.choice(expr_mix), g.choice(pose_mix), look=(g.uniform(-0.5, 0.5), 0)); files.append(p)
+    return files
 
 
 # ------------------------------------------------------------------ lineup

@@ -62,6 +62,20 @@ every silhouette must be recognisable on its own. Show the lineup to the user be
 - Expression set (tools/cast.py): `neutral curious smug shocked disgusted laughing angry scared sad determined`.
   Poses: `stand point_up hips arms_up shrug hold_sword` (+ `prop: spear|sword`). Add new presets to the kit, not ad hoc.
 
+## 5b. Crowds and extras — keep them simple on purpose
+Only named characters (hero, villain, the 2–4 people the story is about) get full detail. A crowd (army, townsfolk,
+guards, spectators, prisoners) is background and must NOT get the same effort:
+- Use `extra_spec()` / `crowd_cards()` in `tools/cast.py`: same style grammar, but `detail="low"` — flat clothes and hair
+  (no fabric/hair textures), half-size cards, built from a few templates with random swaps (hat, hair, build, colour,
+  head offset/tilt) so they never look like clones.
+- Colours: the faction's muted palette (French army: dull blue/brown/green/khaki). Never a hero's unique colour; extras
+  must not draw the eye away from the heroes.
+- Emotion: one shared crowd emotion for the beat (laughing / cheering / shocked / scared), with 1–2 variants mixed in.
+  Poses from a small set (stand, arms_up, hips).
+- Depth: the nearest row as cards, rows behind smaller and blurred by depth of field / haze; far rows can be simple
+  silhouettes or tiny blobs; very far = instanced copies of the same few cards. Never place extras in front of a hero's face.
+- In Blender reuse the same card images on many planes (instancing) instead of drawing new ones per person.
+
 ## 6. Code map
 - `tools/charkit.py` — drawing primitives (brush-outlined shapes, shading, tapered limbs, heads, hair, eyes, brows, mouths).
 - `tools/cast.py` — character system: `draw_full(spec, out, expr, pose, look)`, `draw_head(...)`, `lineup(...)`.

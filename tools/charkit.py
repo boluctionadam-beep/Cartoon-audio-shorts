@@ -124,7 +124,7 @@ class Canvas:
             inner = pts
         mask = self._mask(inner)
         layer = Image.new("RGBA", self.im.size, fill)
-        if pattern:
+        if pattern and not getattr(self, 'no_pattern', False):
             pattern(ImageDraw.Draw(layer), self)
         if shade or hi:
             xs = [p[0] for p in inner]; ys = [p[1] for p in inner]
