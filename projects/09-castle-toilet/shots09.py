@@ -34,8 +34,9 @@ SHOTS = [
  dict(id="s07", at="towers everywhere", set="world", opt=dict(light="golden"), move="up", amt=0.08,
       cam=dict(loc=(9, -9, 42), target=(-4, -26, 4), lens=18), chars=[], sfx=["whoosh"], note="Worm's-eye: towers everywhere."),
  dict(id="s08", at="The French king", set="world", opt=dict(light="dusk", camp=True, trebuchet=True), move="in", amt=0.08,
-      cam=dict(loc=(-108, -92, None), target=(-30, -15, 10), lens=26, dz=1.6, dof="philip", fstop=2.8),
-      chars=[dict(n="philip", e="angry", p="arms_up", look=(0.8, -0.4), at=(-101.5, -86.5, None), anim="shake")],
+      cam=dict(loc=(-88, -74, None), target=(-30, -15, 10), lens=26, dz=1.6, dof="philip", fstop=2.8),
+      chars=[dict(n="philip", e="angry", p="arms_up", look=(0.8, -0.4), at=(-83.1, -69.6, None), anim="shake")],
+      tents=[(-74.6, -67.6), (-80.4, -56.3)],
       sfx=["crowd_murmur"], note="Philip in his camp, furious, swearing at the castle on the cliff."),
  dict(id="s09", at="even with walls of iron", set="world", opt=dict(light="dusk", variant="iron", camp=True), move="in", amt=0.10,
       cam=dict(loc=(-72, -58, None), target=(0, 0, 9), lens=30, dz=1.6, dof="philip", fstop=4),
@@ -283,6 +284,10 @@ def build(sh):
         img = text_image(os.path.join(S.TEX, f"sign_{sh['id']}.png"), sg["text"], font_size=150 if len(sg["text"]) > 6 else 220)
         p = mksign(img, (x, y, z), sg["w"], sg["h"], math.radians(sg.get("yaw", 0)))
         cyl((x, y + 0.05, (z + gz(x, y)) / 2), 0.07, z - gz(x, y), wood("post"), 8)
+    for i, (x, y) in enumerate(sh.get("tents", [])):
+        from scene_kit import flat as _flat, cyl as _cyl
+        z = gz(x, y); T1, T2 = _flat("tentw", (0.92, 0.90, 0.84), 0.9), _flat("tentb2", (0.14, 0.24, 0.62), 0.8)
+        _cyl((x, y, z + 2.2), 3.0, 4.4, T1 if i % 2 else T2, 20, "tent", r2=0.0); _cyl((x, y, z + 0.6), 3.05, 1.2, T2 if i % 2 else T1, 20, "tentb")
     if sh.get("log"):
         lg = cyl((0.2, 2.3, 0.45), 0.42, 5.0, wood("ram", (0.32, 0.20, 0.10), (0.5, 0.34, 0.18)), 20); lg.rotation_euler = (math.radians(90), 0, math.radians(70))
     cm = sh["cam"]; loc = list(cm["loc"])
