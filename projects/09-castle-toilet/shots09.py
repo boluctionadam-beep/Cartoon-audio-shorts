@@ -51,7 +51,7 @@ SHOTS = [
  dict(id="s12", at="So in twelve", set="world", opt=dict(light="golden", camp=True), move="out", amt=0.10,
       cam=dict(loc=(-76, -74, None), target=(0, 0, 8), lens=22, dz=2.0),
       crowd=dict(n=36, area=(-62, -42, -62, -44), colors="FR", expr=("determined", "angry", "determined", "neutral"), pose=("stand", "arms_up", "stand"), anim="march", seed=200),
-      sign=dict(text="1203", at=(-71.4, -71.6), w=1.4, h=0.8, yaw=-45), sfx=["march", "drums"], note="1203: the French army marches on the castle."),
+      sign=dict(text="1203", at=(-72.2, -70.6), w=1.4, h=0.8, yaw=-45), sfx=["march", "drums"], note="1203: the French army marches on the castle."),
  dict(id="s13", at="They dug", set="wall", opt=dict(light="day", grass=False, rubble=True), move="in", amt=0.10,
       cam=dict(loc=(0.5, -9.0, 1.6), target=(0, 4, 1.8), lens=20),
       chars=[dict(n="gaston", e="determined", p="arms_up", look=(0, 0.5), at=(-1.4, 1.4, 0), anim="dig"), dict(n="tibo", e="angry", p="arms_up", look=(0, 0.5), at=(1.6, 1.0, 0), anim="dig")],
