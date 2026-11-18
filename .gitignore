@@ -8,3 +8,8 @@ work/segs/
 out/
 renders/shots/*.log
 audio/*_raw.wav
+projects/*/renders/shots/*.png
+projects/*/work/*.blend
+projects/*/work/*.blend1
+projects/*/work/make.log
+projects/*/work/*_time.txt
