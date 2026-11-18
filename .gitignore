@@ -1,0 +1,5 @@
+work/
+out/
+*.onnx
+voices-*.bin
+__pycache__/
