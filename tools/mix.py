@@ -23,6 +23,6 @@ subprocess.run(['ffmpeg', '-v', 'error', '-y', *ins, '-filter_complex', ';'.join
 comp = a.o.replace('.wav', '_comp.wav')                       # gentle bus compression keeps LRA <= ~4 LU
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', raw, '-af', "acompressor=threshold=-24dB:ratio=2.5:attack=8:release=180:makeup=2", '-ar', '48000', comp], check=True)
 rI, _, _ = lufs(comp); g = -14 - rI
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', comp, '-af', f"volume={g:.2f}dB,alimiter=limit=0.84:level=false", '-ar', '48000', a.o], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', comp, '-af', f"volume={g:.2f}dB,alimiter=limit=0.78:level=false", '-ar', '48000', a.o], check=True)
 oI, oL, oP = lufs(a.o)
 print(f"voice {vI:.1f} LUFS | music {a.music_db:+.0f} dB, sfx {a.sfx_db:+.0f} dB under voice | final {oI:.1f} LUFS, LRA {oL:.1f} LU, peak {oP:.1f} dBFS -> {a.o}")

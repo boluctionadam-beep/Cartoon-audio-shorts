@@ -85,6 +85,23 @@ guards, spectators, prisoners) is background and must NOT get the same effort:
 - `tools/grade.py` — colour grade (contrast, saturation, warm highs, bloom, vignette).
 - `tools/tts.py` — local narrator voice with delivery tags `[slow] [fast] [pause]`.
 
+## 6b. Production pipeline (learned on short 09)
+- `projects/<id>/shots<id>.py` is the single source of truth (timing from words, set, camera, chars with expression/pose/look/
+  swaps/anim, crowd, fx, sfx). `python3 shots09.py plan|cards|render ID`. `bash make.sh` builds everything, resumable.
+- Voice: `tools/tighten.py` (shorten pauses + rubberband tempo) → `tools/align.py` (sherpa-onnx ASR from GitHub models,
+  word timestamps mapped to the script) → `work/words.json`.
+- Backgrounds: Blender stills at 1.1× overscan, ~3.5–6 min each at 1440×2560 / 32 spp on 4 CPU cores. Characters are
+  shadow-only cards in 3D and animated in 2D by `tools/compose.py` (camera moves, idle/laugh/cheer/climb/pop…, expression
+  swaps on words, flies/dust/boulder/blob/splash/arrows/flash/shake), 60 fps, 0.25 s dissolves. `baked=True` only where
+  geometry must hide the character; `clip=<point>` hides a card below a line (popping out of holes).
+- Heavy sets (castle world) are built once and cached as a .blend; trees near the camera are culled automatically.
+- Booleans: cutters must pass THROUGH the visible face; never hide_viewport a cutter. Cards face the camera via
+  yaw = atan2(dx, -dy).
+- Always do a low-res preview pass of every shot (`preview_frames.py` composed contact sheet) before the full render,
+  check cameras inside objects, characters out of frame, empty voids, cut-off signs.
+- Sound: `tools/sound.py` (synth SFX + Kokoro crowd voices + Karplus-Strong music by story sections) → `tools/mix.py`
+  (music −12, SFX −8, bus compression, −14 LUFS, TP ≤ −1.5) → `tools/qa.py`.
+
 ## 7. Accounts / money
 - Higgsfield: **never spend credits**. Trial auto-renewal was cancelled by the user (Nov 2026); unlimited was off. Use only `use_unlim`
   generations when available; otherwise render locally.
