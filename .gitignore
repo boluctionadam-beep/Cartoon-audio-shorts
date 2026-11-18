@@ -4,3 +4,7 @@ out/
 voices-*.bin
 __pycache__/
 *_raw.png
+work/segs/
+out/
+renders/shots/*.log
+audio/*_raw.wav

@@ -81,6 +81,27 @@ def noisy(name, c0, c1, scale=0.5, rough=0.9, bump=0.2, detail=4):
     return m
 
 
+def terrain(name="terrain", g0=(0.14, 0.34, 0.07), g1=(0.40, 0.58, 0.15), rock=(0.72, 0.68, 0.60), steep=0.75):
+    """grass on flats, chalky rock on steep slopes, multi-scale colour variation (fields, patches)"""
+    m = bpy.data.materials.new(name); N, L = _nodes(m); b = N["Principled BSDF"]
+    tc = N.new("ShaderNodeTexCoord")
+    n1 = N.new("ShaderNodeTexNoise"); n1.inputs["Scale"].default_value = 0.012; n1.inputs["Detail"].default_value = 4; L.new(tc.outputs["Object"], n1.inputs["Vector"])
+    n2 = N.new("ShaderNodeTexNoise"); n2.inputs["Scale"].default_value = 0.25; n2.inputs["Detail"].default_value = 8; L.new(tc.outputs["Object"], n2.inputs["Vector"])
+    cr = N.new("ShaderNodeValToRGB"); cr.color_ramp.elements[0].color = (*g0, 1); cr.color_ramp.elements[1].color = (*g1, 1); L.new(n1.outputs["Fac"], cr.inputs["Fac"])
+    mx = N.new("ShaderNodeMix"); mx.data_type = "RGBA"; mx.blend_type = "OVERLAY"; mx.inputs["Factor"].default_value = 0.35
+    L.new(cr.outputs["Color"], mx.inputs[6]); L.new(n2.outputs["Color"], mx.inputs[7])
+    rk = N.new("ShaderNodeTexNoise"); rk.inputs["Scale"].default_value = 0.5; rk.inputs["Detail"].default_value = 10; L.new(tc.outputs["Object"], rk.inputs["Vector"])
+    rc = N.new("ShaderNodeValToRGB"); rc.color_ramp.elements[0].color = (rock[0] * .7, rock[1] * .7, rock[2] * .7, 1); rc.color_ramp.elements[1].color = (*rock, 1); L.new(rk.outputs["Fac"], rc.inputs["Fac"])
+    geo = N.new("ShaderNodeNewGeometry"); sp = N.new("ShaderNodeSeparateXYZ"); L.new(geo.outputs["Normal"], sp.inputs[0])
+    mr = N.new("ShaderNodeMapRange"); mr.inputs["From Min"].default_value = steep; mr.inputs["From Max"].default_value = steep + 0.08
+    mr.inputs["To Min"].default_value = 1.0; mr.inputs["To Max"].default_value = 0.0; L.new(sp.outputs["Z"], mr.inputs["Value"])
+    m2 = N.new("ShaderNodeMix"); m2.data_type = "RGBA"; L.new(mr.outputs["Result"], m2.inputs["Factor"]); L.new(mx.outputs[2], m2.inputs[6]); L.new(rc.outputs["Color"], m2.inputs[7])
+    L.new(m2.outputs[2], b.inputs["Base Color"])
+    bp = N.new("ShaderNodeBump"); bp.inputs["Strength"].default_value = 0.3; L.new(rk.outputs["Fac"], bp.inputs["Height"]); L.new(bp.outputs["Normal"], b.inputs["Normal"])
+    b.inputs["Roughness"].default_value = 0.92
+    return m
+
+
 def wood(name="wood", c0=(0.30, 0.17, 0.08), c1=(0.52, 0.32, 0.16), planks=True):
     m = bpy.data.materials.new(name); N, L = _nodes(m); b = N["Principled BSDF"]
     tc = N.new("ShaderNodeTexCoord"); mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (1.0, 8.0, 1.0)
@@ -93,7 +114,7 @@ def wood(name="wood", c0=(0.30, 0.17, 0.08), c1=(0.52, 0.32, 0.16), planks=True)
     return m
 
 
-def water(name="water", col=(0.08, 0.32, 0.45)):
+def water(name="water", col=(0.06, 0.30, 0.48)):
     m = bpy.data.materials.new(name); N, L = _nodes(m); b = N["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*col, 1); b.inputs["Roughness"].default_value = 0.06
     tc = N.new("ShaderNodeTexCoord"); nz = N.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 2.5
@@ -152,7 +173,7 @@ def cut(target, cutter):
     m = target.modifiers.new("cut", "BOOLEAN"); m.object = cutter; m.operation = "DIFFERENCE"
     try: m.solver = "EXACT"
     except Exception: pass
-    cutter.hide_render = True; cutter.hide_viewport = True
+    cutter.hide_render = True; cutter.display_type = "WIRE"
     return target
 
 
@@ -192,6 +213,11 @@ def tower(x, y, r, h, mat, z0=0.0, crenel=True, roof=None):
             o = box((x + math.cos(a) * (r - 0.3), y + math.sin(a) * (r - 0.3), z0 + h + 0.55), (1.0, 0.6, 1.1), mat, 0.03, "tmer"); o.rotation_euler.z = a + math.pi / 2
     if roof:
         cyl((x, y, z0 + h + r * 0.9), r * 1.15, r * 1.8, roof, 40, "roof", r2=0.0)
+    D = bpy.data.materials.get("slit") or flat("slit", (0.02, 0.015, 0.012), 1.0)
+    for k in range(4):
+        a = k * math.pi / 2 + 0.4
+        for zz in (h * 0.45, h * 0.75):
+            o = box((x + math.cos(a) * (r + 0.02), y + math.sin(a) * (r + 0.02), z0 + zz), (0.12, 0.35, 1.2), D); o.rotation_euler.z = a
     return t
 
 
@@ -296,7 +322,7 @@ def face_cards(cam):
         if o["yaw"] != -999:
             o.rotation_euler.z = math.radians(o["yaw"])
         else:
-            d = cam.location - o.location; o.rotation_euler.z = math.atan2(d.y, d.x) - math.pi / 2
+            d = cam.location - o.location; o.rotation_euler.z = math.atan2(d.x, -d.y)
 
 
 def point(name, loc):
@@ -343,11 +369,20 @@ def sky(preset="golden"):
         s.data.energy = 1.1; s.data.color = (0.55, 0.68, 1.0); s.data.angle = math.radians(1.5)
         return s
     p = P[preset]
-    sk = WN.new("ShaderNodeTexSky"); sk.sky_type = "MULTIPLE_SCATTERING"
-    try:
-        sk.sun_elevation = math.radians(p["el"]); sk.sun_rotation = math.radians(p["rot"]); sk.air_density = 1.3
-    except Exception: pass
-    WL.new(sk.outputs["Color"], bg.inputs["Color"]); bg.inputs["Strength"].default_value = p["sky"]
+    COLS = {"day": ((0.70, 0.85, 1.0), (0.12, 0.40, 0.95)), "golden": ((1.0, 0.82, 0.60), (0.16, 0.44, 0.95)),
+            "dawn": ((1.0, 0.74, 0.58), (0.26, 0.44, 0.88)), "dusk": ((1.0, 0.58, 0.36), (0.28, 0.26, 0.66))}
+    hor, zen = COLS[preset]
+    tc = WN.new("ShaderNodeTexCoord"); sep = WN.new("ShaderNodeSeparateXYZ"); WL.new(tc.outputs["Generated"], sep.inputs[0])
+    nrm = WN.new("ShaderNodeVectorMath"); nrm.operation = "NORMALIZE"; WL.new(tc.outputs["Generated"], nrm.inputs[0])
+    sz = WN.new("ShaderNodeSeparateXYZ"); WL.new(nrm.outputs[0], sz.inputs[0])
+    cr = WN.new("ShaderNodeValToRGB"); cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[0].color = (*hor, 1)
+    cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[1].position = 0.16; cr.color_ramp.elements[1].color = (*zen, 1)
+    WL.new(sz.outputs["Z"], cr.inputs["Fac"])
+    lp_ = WN.new("ShaderNodeLightPath"); bg2 = WN.new("ShaderNodeBackground"); WL.new(cr.outputs["Color"], bg2.inputs["Color"]); bg2.inputs["Strength"].default_value = 1.6
+    bg.inputs["Strength"].default_value = p["sky"] * 2.2; WL.new(cr.outputs["Color"], bg.inputs["Color"])
+    mx_ = WN.new("ShaderNodeMath"); mx_.operation = "MAXIMUM"; WL.new(lp_.outputs["Is Camera Ray"], mx_.inputs[0]); WL.new(lp_.outputs["Is Glossy Ray"], mx_.inputs[1])
+    mix = WN.new("ShaderNodeMixShader"); WL.new(mx_.outputs[0], mix.inputs[0]); WL.new(bg.outputs[0], mix.inputs[1]); WL.new(bg2.outputs[0], mix.inputs[2])
+    WL.new(mix.outputs[0], WN["World Output"].inputs["Surface"])
     bpy.ops.object.light_add(type="SUN"); s = bpy.context.object
     s.rotation_euler = Vector(p["dir"]).normalized().to_track_quat("-Z", "Y").to_euler()
     s.data.energy = p["e"]; s.data.color = p["sun"]; s.data.angle = math.radians(2.5)

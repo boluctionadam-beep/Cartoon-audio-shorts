@@ -107,8 +107,7 @@ def world_h(x, y):
 
 def set_world(variant="normal", light="golden", camp=False, flags="english", scaffold=False, trebuchet=False, breach=False, smoke=False):
     S, SD = wall_mats(variant if variant in ("iron", "butter") else "normal")
-    G = noisy("grass_w", (0.16, 0.36, 0.08), (0.42, 0.58, 0.16), 0.08, bump=0)
-    grid_ground(520, 220, G, world_h)
+    grid_ground(520, 220, terrain("terrain_w"), world_h)
     plane((150, 0, -49), (120, 600), water("river"))                      # the Seine
     mo = cyl((0, 0, -1.5), 33.6, 0.2, water("moat", (0.10, 0.28, 0.30)), 128, "moat")
     cut(mo, cyl((0, 0, -1.5), 29.4, 2.0, None, 128, "moatcut"))
@@ -218,10 +217,10 @@ def set_cutaway(light="night", labels=False):
     S, SD = wall_mats("normal")
     CUTF = noisy("cutface", (0.62, 0.58, 0.50), (0.74, 0.70, 0.62), 1.5, bump=0.25)
     w = box((0, 2.0, 7), (10, 4, 14), CUTF, 0.0, "wall")                   # front face y=0 is the cut
-    shaft = box((0, 0.9, 5.5), (1.3, 1.6, 9.2), None)                      # chute: z 0.9..10.1
+    shaft = box((0, 0.6, 5.5), (1.3, 2.2, 9.2), None)                      # chute: z 0.9..10.1
     cut(w, shaft)
-    room = box((0, 0.9, 11.4), (2.6, 1.6, 2.6), None); cut(w, room)        # toilet room on top
-    out = box((-0.9, 0.9, 0.9), (2.4, 1.6, 1.4), None); out.rotation_euler.y = math.radians(30); cut(w, out)
+    room = box((0, 0.6, 11.4), (2.6, 2.2, 2.6), None); cut(w, room)        # toilet room on top
+    out = box((-0.9, 0.6, 0.9), (2.4, 2.2, 1.4), None); out.rotation_euler.y = math.radians(30); cut(w, out)
     GR = noisy("grime", (0.10, 0.07, 0.04), (0.22, 0.15, 0.08), 2.0, bump=0.4)
     box((0, 1.75, 5.5), (1.3, 0.02, 9.2), GR)                              # dark back of the chute
     box((0, 1.75, 11.4), (2.6, 0.02, 2.6), S)                              # room back wall (stone)
