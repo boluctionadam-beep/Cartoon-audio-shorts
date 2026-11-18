@@ -13,3 +13,4 @@ projects/*/work/*.blend
 projects/*/work/*.blend1
 projects/*/work/make.log
 projects/*/work/*_time.txt
+projects/*/renders/shots/*.log
