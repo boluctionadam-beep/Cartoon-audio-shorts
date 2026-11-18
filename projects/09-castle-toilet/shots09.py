@@ -32,14 +32,14 @@ SHOTS = [
  dict(id="s06", at="Three rings", set="world", opt=dict(light="golden"), move="in", amt=0.10,
       cam=dict(loc=(-20, -70, 120), target=(0, 0, 0), lens=30), chars=[], sfx=["whoosh"], note="Top-down: three rings of walls + the moat."),
  dict(id="s07", at="towers everywhere", set="world", opt=dict(light="golden"), move="up", amt=0.08,
-      cam=dict(loc=(8, -22, 1.6), target=(0, 0, 20), lens=14), chars=[], sfx=["whoosh"], note="Worm's-eye: towers everywhere."),
+      cam=dict(loc=(9, -9, 42), target=(-4, -26, 4), lens=18), chars=[], sfx=["whoosh"], note="Worm's-eye: towers everywhere."),
  dict(id="s08", at="The French king", set="world", opt=dict(light="dusk", camp=True, trebuchet=True), move="in", amt=0.08,
       cam=dict(loc=(-108, -92, None), target=(-30, -15, 10), lens=26, dz=1.6, dof="philip", fstop=2.8),
       chars=[dict(n="philip", e="angry", p="arms_up", look=(0.8, -0.4), at=(-101.5, -86.5, None), anim="shake")],
       sfx=["crowd_murmur"], note="Philip in his camp, furious, swearing at the castle on the cliff."),
  dict(id="s09", at="even with walls of iron", set="world", opt=dict(light="dusk", variant="iron", camp=True), move="in", amt=0.10,
-      cam=dict(loc=(-70, -55, None), target=(0, 0, 10), lens=30, dz=3.0, dof="philip", fstop=4),
-      chars=[dict(n="philip", e="determined", p="hips", look=(0.8, -0.3), at=(-66.5, -51.0, None))],
+      cam=dict(loc=(-72, -58, None), target=(0, 0, 9), lens=30, dz=1.6, dof="philip", fstop=4),
+      chars=[dict(n="philip", e="determined", p="hips", look=(0.8, -0.3), at=(-67.4, -53.4, None))],
       sfx=["clang"], note="Imagined: the castle made of iron plates; Philip, determined: 'I'd still take it'."),
  dict(id="s10", at="Richard just laughed", set="battlements", opt=dict(light="golden"), move="in", amt=0.08,
       cam=dict(loc=(0.6, 4.6, 1.5), target=(-0.2, -1, 1.45), lens=28, dof="richard", fstop=2.8),
@@ -48,9 +48,9 @@ SHOTS = [
       cam=dict(loc=(1.9, 4.3, 1.9), target=(0, -1, 1.35), lens=26, dof="richard", fstop=2.8),
       chars=[dict(n="richard", e="smug", p="hips", look=(0.6, 0), at=(-0.3, -0.5, 0))], sfx=["squish"], note="Walls of butter (with a knife in it). Richard smug."),
  dict(id="s12", at="So in twelve", set="world", opt=dict(light="golden", camp=True), move="out", amt=0.10,
-      cam=dict(loc=(-78, -88, None), target=(-20, -20, 5), lens=22, dz=2.2),
-      crowd=dict(n=36, area=(-72, -44, -80, -52), colors="FR", expr=("determined", "angry", "determined", "neutral"), pose=("stand", "arms_up", "stand"), anim="march", seed=200),
-      sign=dict(text="1203", at=(-74.2, -83.0), w=1.4, h=0.8, yaw=-30), sfx=["march", "drums"], note="1203: the French army marches on the castle."),
+      cam=dict(loc=(-76, -74, None), target=(0, 0, 8), lens=22, dz=2.0),
+      crowd=dict(n=36, area=(-62, -42, -62, -44), colors="FR", expr=("determined", "angry", "determined", "neutral"), pose=("stand", "arms_up", "stand"), anim="march", seed=200),
+      sign=dict(text="1203", at=(-71.4, -71.6), w=1.4, h=0.8, yaw=-45), sfx=["march", "drums"], note="1203: the French army marches on the castle."),
  dict(id="s13", at="They dug", set="wall", opt=dict(light="day", grass=False, rubble=True), move="in", amt=0.10,
       cam=dict(loc=(0.5, -9.0, 1.6), target=(0, 4, 1.8), lens=20),
       chars=[dict(n="gaston", e="determined", p="arms_up", look=(0, 0.5), at=(-1.4, 1.4, 0), anim="dig"), dict(n="tibo", e="angry", p="arms_up", look=(0, 0.5), at=(1.6, 1.0, 0), anim="dig")],
@@ -59,7 +59,7 @@ SHOTS = [
  dict(id="s14", at="they smashed", set="world", opt=dict(light="golden", camp=True, trebuchet=True), move="in", amt=0.12,
       cam=dict(loc=(-78, -54, None), target=(-36, -12, 8), lens=22, dz=2.0),
       fx=[dict(t="boulder", a="treb_tip", b="castle"), dict(t="shake", at=0.55)], sfx=["catapult", "boom"], note="Trebuchet hurls a boulder; impact."),
- dict(id="s15", at="they starved", set="gate", opt=dict(light="dusk", open_=False), move="in", amt=0.08,
+ dict(id="s15", at="they starved", set="gate", opt=dict(light="golden", open_=False), move="in", amt=0.08,
       cam=dict(loc=(1.0, -7.0, 1.7), target=(-0.5, 0, 1.5), lens=26, dof="roger", fstop=2.8),
       chars=[dict(n="roger", e="sad", p="stand", look=(0, 0.6), at=(-0.6, -1.8, 0))],
       crowd=dict(n=4, area=(-4.5, 4.0, 0.0, 3.5), colors="EN", expr=("sad",), pose=("stand", "shrug"), anim="idle", seed=260),
@@ -85,7 +85,7 @@ SHOTS = [
  dict(id="s21", at="With a hole", set="wall", opt=dict(light="golden"), move="in", amt=0.12,
       cam=dict(loc=(1.8, 1.4, 3.6), target=(2.0, 2.9, 7.3), lens=35), fx=[dict(t="flies", pt="hole")], sfx=["flies"], note="ECU from below: the hole."),
  dict(id="s22", at="Yep", set="wall", opt=dict(light="golden"), move="in", amt=0.06,
-      cam=dict(loc=(0.0, -5.7, 1.78), target=(-0.25, -4.5, 1.78), lens=40, dof="bogis", fstop=2.0),
+      cam=dict(loc=(0.05, -6.7, 1.85), target=(-0.25, -4.5, 1.6), lens=40, dof="bogis", fstop=2.0),
       chars=[dict(n="bogis", e="disgusted", p="stand", look=(0.3, -0.4), at=WALL_HERO, anim="recoil")], sfx=["bleh"], note="Bogis close-up: disgusted 'Yep.'"),
  dict(id="s23", at="That's the toilet", set="toilet", move="in", amt=0.10,
       cam=dict(loc=(0.0, -1.7, 2.5), target=(0, 1.7, 0.9), lens=24), fx=[dict(t="flies", pt="seat_hole")], sfx=["flies", "drip"], note="Inside the garderobe: the wooden seat over the chute."),
@@ -97,7 +97,7 @@ SHOTS = [
       sfx=["scrape", "grunt", "scrape"], note="Cutaway: Bogis, Tibo and Gaston crawl up the chute."),
  dict(id="s25", at="popped out", set="chapel", move="in", amt=0.08,
       cam=dict(loc=(0.6, -4.6, 1.7), target=(-0.9, 2.0, 1.0), lens=24),
-      chars=[dict(n="bogis", e="smug", p="stand", look=(0.6, 0), at=(-1.6, 0.6, -1.25), anim="pop", clip="floor_hole")],
+      chars=[dict(n="bogis", e="smug", p="stand", look=(0.6, 0), at=(-1.6, 0.6, -0.62), anim="pop", clip="floor_hole")],
       sfx=["pop", "choir"], note="Bogis pops out of the latrine hole into the chapel, smug."),
  dict(id="s26", at="and threw open", set="gate", opt=dict(light="dawn", open_=True), move="in", amt=0.10,
       cam=dict(loc=(0, -9.5, 1.8), target=(0, 6, 3.0), lens=22),
@@ -114,8 +114,8 @@ SHOTS = [
       chars=[dict(n="philip", e="smug", p="hips", look=(0.7, -0.6), at=(-76.0, -66.4, None), swaps=[("surrendered", "laughing")])],
       sfx=["fanfare"], note="French flag over the keep. Philip smug."),
  dict(id="s29", at="You see", set="cutaway", opt=dict(light="day"), move="in", amt=0.08,
-      cam=dict(loc=(-3.0, -15.0, 6.5), target=(-2.0, 1, 5.5), lens=24),
-      sign=dict(text="GARDEROBE", at=(-6.0, -1.0), w=2.6, h=0.9, yaw=0, z=2.2), sfx=["whoosh"], note="Mechanism: a clean cutaway of the wall, the toilet and its chute over the moat."),
+      cam=dict(loc=(-3.6, -16.5, 4.8), target=(-2.6, 1, 4.6), lens=24),
+      sign=dict(text="GARDEROBE", at=(-4.6, -2.0), w=2.4, h=0.8, yaw=0, z=1.4), sfx=["whoosh"], note="Mechanism: a clean cutaway of the wall, the toilet and its chute over the moat."),
  dict(id="s30", at="Everything just", set="cutaway", opt=dict(light="day"), move="in", amt=0.06,
       cam=dict(loc=(-1.6, -11.5, 6.0), target=(-0.6, 1, 5.0), lens=24),
       fx=[dict(t="blob", a="seat", b="chute_bottom", c="moat"), dict(t="splash", pt="moat", at=0.8)], sfx=["drop", "splash"], note="Everything just drops outside (into the moat)."),
@@ -134,7 +134,7 @@ SHOTS = [
       chars=[dict(n="richard", e="shocked", p="shrug", look=(0, 0.4), at=(-0.2, -0.6, 0), anim="shake")], sfx=["melt"], note="The 'butter' castle melts; Richard shocked."),
  dict(id="s35", at="was taken through", set="toilet", move="in", amt=0.10, hold=0.9,
       cam=dict(loc=(0.25, -1.35, 1.95), target=(0, 1.7, 1.45), lens=24),
-      chars=[dict(n="bogis", e="laughing", p="arms_up", look=(0, 0), at=(0, 1.62, 0.05), anim="pop_final", clip="seat_hole", prop="banner")],
+      chars=[dict(n="bogis", e="laughing", p="arms_up", look=(0, 0), at=(0, 1.62, 0.32), anim="pop_final", clip="seat_hole", prop="banner")],
       fx=[dict(t="flash", word="toilet"), dict(t="shake", word="toilet")], sfx=["pop", "boom", "fanfare"], note="PAYOFF: Bogis bursts out of the toilet with the French banner on 'toilet'."),
 ]
 
@@ -289,6 +289,9 @@ def build(sh):
     if loc[2] is None: loc[2] = gz(loc[0], loc[1]) + cm.get("dz", 1.7)
     dof = objs.get(cm["dof"]) if isinstance(cm.get("dof"), str) else cm.get("dof")
     camera(tuple(loc), cm.get("target"), cm.get("rot"), cm.get("lens", 24), cm.get("shift", (0, 0)), dof, cm.get("fstop", 2.8))
+    for ob in list(bpy.data.objects):                                     # no tree in front of the lens
+        if ob.get("tree") and math.hypot(ob.location.x - loc[0], ob.location.y - loc[1]) < 16:
+            bpy.data.objects.remove(ob)
 
 
 if __name__ == "__main__":
@@ -301,5 +304,6 @@ if __name__ == "__main__":
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sh = [s for s in SHOTS if s["id"] == sid][0]; build(sh)
         from scene_kit import render
-        render(out, W, H, spp, exposure=0.6 if sh.get("opt", {}).get("light") == "night" else (0.2 if sh["set"] in ("toilet", "chapel") else -0.3))
+        ex = 0.6 if sh.get("opt", {}).get("light") == "night" else (0.5 if sh["set"] in ("toilet", "chapel") else (0.2 if sh["set"] == "gate" else -0.3))
+        render(out, W, H, spp, exposure=ex)
         print("WROTE", out)

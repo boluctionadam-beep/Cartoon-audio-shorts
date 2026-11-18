@@ -18,7 +18,7 @@ Voice: audio/voice.wav (61.2 s, tightened ×1.1 from 72.1 s). 1440×2560, 60 fps
 | s12 | 20.57–23.14 | So in twelve oh three, the French came. | world golden | out 10% | ; crowd ×36 determined/angry/determined/neutral (march) |  / march, drums | 1203: the French army marches on the castle. |
 | s13 | 22.89–23.82 | They dug, | wall day | in 10% | **gaston** determined · arms_up · look (0, 0.5); **tibo** angry · arms_up · look (0, 0.5); crowd ×6 determined/angry (dig) | dust / dig, dig, dig | Miners digging at the foot of the wall. |
 | s14 | 23.57–24.71 | they smashed, | world golden | in 12% | — | boulder, shake / catapult, boom | Trebuchet hurls a boulder; impact. |
-| s15 | 24.46–26.47 | they starved the place for months. | gate dusk | in 8% | **roger** sad · stand · look (0, 0.6); crowd ×4 sad (idle) |  / stomach, wind | Inside: Roger and the defenders, hungry and sad, months pass. |
+| s15 | 24.46–26.47 | they starved the place for months. | gate golden | in 8% | **roger** sad · stand · look (0, 0.6); crowd ×4 sad (idle) |  / stomach, wind | Inside: Roger and the defenders, hungry and sad, months pass. |
 | s16 | 26.22–28.11 | The first wall fell. | world golden | in 10% | ; crowd ×14 laughing/laughing/determined (cheer) | shake / collapse, cheer | The outer wall collapses, French cheer. |
 | s17 | 27.86–29.95 | The second wouldn't budge. | wall day | out 8% | **gaston** shocked · shrug · look (-0.4, -0.3); **tibo** angry · hips · look (-0.6, 0) |  / thud, boing | Battering ram bounces off the second wall. Gaston dazed, Tibo furious. |
 | s18 | 29.70–31.35 | Then, the story goes, | wall golden | in 10% | **bogis** neutral → curious @story goes · hold_spear · look (0, 0) |  / birds | Meet Bogis (neutral → curious). |

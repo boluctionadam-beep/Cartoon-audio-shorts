@@ -18,7 +18,7 @@ def wall_mats(variant):
         m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.35
         return m, m
     if variant == "butter":
-        m = stone("butter", base=(0.98, 0.84, 0.36), scale=0.5, row=0.6, width=1.2, var=0.94, mortar=(0.95, 0.78, 0.30), bump=0.25, dirt=False)
+        m = stone("butter", base=(1.0, 0.80, 0.18), scale=0.5, row=0.6, width=1.2, var=0.93, mortar=(0.92, 0.70, 0.12), bump=0.25, dirt=False)
         b = m.node_tree.nodes["Principled BSDF"]; b.inputs["Roughness"].default_value = 0.25
         b.inputs["Subsurface Weight"].default_value = 0.3
         return m, m
@@ -105,20 +105,64 @@ def world_h(x, y):
     return z
 
 
-def set_world(variant="normal", light="golden", camp=False, flags="english", scaffold=False, trebuchet=False, breach=False, smoke=False):
-    S, SD = wall_mats(variant if variant in ("iron", "butter") else "normal")
+WORLD_CACHE = os.path.join(HERE, "work", "world_base.blend")
+
+
+def _tag(before, key):
+    for o in bpy.data.objects:
+        if o.name not in before: o[key] = 1
+
+
+def _world_base():
+    S, SD = wall_mats("normal")
     grid_ground(520, 220, terrain("terrain_w"), world_h)
     plane((150, 0, -49), (120, 600), water("river"))                      # the Seine
     mo = cyl((0, 0, -1.5), 33.6, 0.2, water("moat", (0.10, 0.28, 0.30)), 128, "moat")
     cut(mo, cyl((0, 0, -1.5), 29.4, 2.0, None, 128, "moatcut"))
-    # castle: keep + three rings
+    before = set(o.name for o in bpy.data.objects)
     tower(0, 4, 6.5, 26, S, 0)
     ring_wall(0, 0, 14, 13, 3, S, towers=5, tmat=SD)
     ring_wall(0, 0, 26, 11, 3, S, towers=8, tmat=SD)
-    ring_wall(-6, 0, 40, 9, 3, S, towers=7, tmat=SD, gap=(5.6, 6.8) if not breach else (2.4, 3.3))
-    point("castle", (0, 0, 10)); point("keep_top", (0, 4, 27))
-    # flags on the keep
-    pole = cyl((0, 4, 31), 0.25, 9, wood("pole"), 8)
+    _tag(before, "castle"); before = set(o.name for o in bpy.data.objects)
+    ring_wall(-6, 0, 40, 9, 3, S, towers=7, tmat=SD, gap=(5.6, 6.8))
+    _tag(before, "castle"); _tag(before, "outer")
+    cyl((0, 4, 31), 0.25, 9, wood("pole"), 8)
+    TR, LF = wood("trunk"), noisy("leaf", (0.10, 0.28, 0.06), (0.25, 0.46, 0.10), 0.5, bump=0.3)
+    rg = random.Random(9); before = set(o.name for o in bpy.data.objects)
+    for i in range(110):
+        a = rg.uniform(0, 2 * math.pi); r = rg.uniform(62, 220); x, y = math.cos(a) * r, math.sin(a) * r
+        if 45 < x < 120: continue
+        tree(x, y, world_h(x, y), rg.uniform(1.2, 2.0), (TR, LF))
+    for i in range(30):
+        x = rg.uniform(200, 320); y = rg.uniform(-250, 250); tree(x, y, -48, rg.uniform(1.4, 2.2), (TR, LF))
+    _tag(before, "tree")
+    HL = noisy("hills", (0.18, 0.34, 0.12), (0.32, 0.46, 0.18), 0.02, bump=0)
+    for i in range(10):
+        sphere((rg.uniform(-500, 500), rg.uniform(400, 600), -60), rg.uniform(120, 220), HL, (1.6, 1, 0.35), sub=3)
+    clouds(9, (-300, 300), (300, 420), (90, 160), 3.0)
+
+
+def set_world(variant="normal", light="golden", camp=False, flags="english", scaffold=False, trebuchet=False, breach=False, smoke=False):
+    if os.path.exists(WORLD_CACHE):
+        bpy.ops.wm.open_mainfile(filepath=WORLD_CACHE)
+    else:
+        _world_base(); os.makedirs(os.path.dirname(WORLD_CACHE), exist_ok=True)
+        bpy.ops.wm.save_as_mainfile(filepath=WORLD_CACHE)
+    S, SD = wall_mats(variant if variant in ("iron", "butter") else "normal")
+    if variant in ("iron", "butter"):
+        for o in bpy.data.objects:
+            if o.get("castle") and o.type == "MESH" and o.data.materials and o.data.materials[0].name.startswith("stone"):
+                o.data.materials[0] = S
+    if breach:                                                             # knock a hole in the outer ring (facing the camp)
+        for o in list(bpy.data.objects):
+            if o.get("outer"):
+                a = math.atan2(o.location.y, o.location.x + 6) % (2 * math.pi)
+                if 2.5 < a < 3.25 and o.location.z > -1: bpy.data.objects.remove(o)
+        rg = random.Random(3)
+        for i in range(60):
+            a = rg.uniform(2.5, 3.25); r = 40 + rg.uniform(-3, 4); x, y = -6 + math.cos(a) * r, math.sin(a) * r
+            sphere((x, y, world_h(x, y) + rg.uniform(0, 1.5)), rg.uniform(0.5, 1.5), SD, (1, rg.uniform(.7, 1.3), rg.uniform(.5, .9)), sub=1, smooth=False)
+    point("castle", (-38, 6, 6) if breach else (-30, 10, 8)); point("keep_top", (0, 4, 27))
     if flags:
         fcol = (0.62, 0.06, 0.06) if flags == "english" else (0.12, 0.22, 0.62)
         bpy.ops.mesh.primitive_grid_add(x_subdivisions=24, y_subdivisions=12, size=1, location=(3.2, 4, 33.5)); fl = bpy.context.object
@@ -130,39 +174,26 @@ def set_world(variant="normal", light="golden", camp=False, flags="english", sca
     if scaffold:
         W = wood("scaf")
         for i in range(10):
-            a = 0.9 + i * 0.12; x, y = math.cos(a) * 28, math.sin(a) * 28
+            a = 3.6 + i * 0.1; x, y = math.cos(a) * 28, math.sin(a) * 28
             cyl((x, y, 7), 0.15, 14, W, 6); cyl((x + 1.2, y + 0.4, 7), 0.15, 14, W, 6)
             for z in (4, 8, 12):
-                o = box((x + 0.6, y + 0.2, z), (2.2, 0.8, 0.15), W)
-        for i in range(30):
-            rg = random.Random(i); box((rg.uniform(-60, -30), rg.uniform(-40, 10), world_h(-45, -15) + 0.4), (1.2, 0.8, 0.7), SD, 0.05)
-    # trees on the slopes and the far bank, hills
-    TR, LF = wood("trunk"), noisy("leaf", (0.10, 0.28, 0.06), (0.25, 0.46, 0.10), 0.5, bump=0.3)
-    rg = random.Random(9)
-    for i in range(140):
-        a = rg.uniform(0, 2 * math.pi); r = rg.uniform(62, 220); x, y = math.cos(a) * r, math.sin(a) * r
-        if 45 < x < 120: continue
-        tree(x, y, world_h(x, y), rg.uniform(1.2, 2.0), (TR, LF))
-    for i in range(40):
-        x = rg.uniform(200, 320); y = rg.uniform(-250, 250); tree(x, y, -48, rg.uniform(1.4, 2.2), (TR, LF))
-    HL = noisy("hills", (0.18, 0.34, 0.12), (0.32, 0.46, 0.18), 0.02, bump=0)
-    for i in range(10):
-        sphere((rg.uniform(-500, 500), rg.uniform(400, 600), -60), rg.uniform(120, 220), HL, (1.6, 1, 0.35), sub=3)
+                box((x + 0.6, y + 0.2, z), (2.2, 0.8, 0.15), W)
+        for i in range(24):
+            rg = random.Random(i); x, y = rg.uniform(-50, -36), rg.uniform(-40, -20); box((x, y, world_h(x, y) + 0.35), (1.2, 0.8, 0.7), SD, 0.05)
     if camp:
         _camp(trebuchet)
     if smoke:
-        SM = flat("smoke", (0.55, 0.52, 0.50), 1.0, emit=0.15)
+        SM = flat("smoke", (0.55, 0.52, 0.50), 1.0, emit=0.15); rg = random.Random(11)
         for i in range(14):
-            sphere((rg.uniform(-46, -30), rg.uniform(-20, 10), 6 + i * 1.3), rg.uniform(2, 4), SM, (1, 1, 0.8), sub=2)
-    clouds(9, (-300, 300), (300, 420), (90, 160), 3.0)
+            sphere((rg.uniform(-48, -40), rg.uniform(-2, 12), 4 + i * 1.3), rg.uniform(2, 4), SM, (1, 1, 0.8), sub=2)
     sky(light)
 
 
 def _camp(trebuchet):
-    rg = random.Random(21); cx, cy = -95, -70
+    rg = random.Random(21); cx, cy = -112, -88
     T1, T2 = flat("tent", (0.92, 0.90, 0.84), 0.9), flat("tentb", (0.14, 0.24, 0.62), 0.8)
     for i in range(16):
-        x, y = cx + rg.uniform(-35, 35), cy + rg.uniform(-25, 25); z = world_h(x, y)
+        x, y = cx + rg.uniform(-24, 24), cy + rg.uniform(-16, 16); z = world_h(x, y)
         cyl((x, y, z + 2.2), 3.0, 4.4, T1 if i % 3 else T2, 20, "tent", r2=0.0)
         cyl((x, y, z + 0.6), 3.05, 1.2, T2 if i % 3 else T1, 20, "tentb")
         cyl((x, y, z + 5), 0.08, 2, wood("tp"), 6)
@@ -231,7 +262,7 @@ def set_cutaway(light="night", labels=False):
     # outside: moat on the left, ground
     plane((-12, 0, -0.6), (16, 30), water("moat2", (0.10, 0.28, 0.30)))
     G = noisy("grass_c", (0.14, 0.34, 0.08), (0.40, 0.56, 0.14), 0.3)
-    box((-14, 4, -1.5), (14, 30, 1.6), G); box((14, 4, -0.5), (18, 30, 1.0), G)
+    box((-14, 4, -1.5), (14, 30, 1.6), G); box((14, 6, -0.5), (18, 26, 1.0), noisy("earth", (0.22, 0.18, 0.10), (0.32, 0.26, 0.15), 0.6))
     box((-20, 2.0, 7), (0.1, 0.1, 0.1), None)
     point("moat", (-5.5, 0, -0.5))
     # torch in the room (warm) + night
@@ -240,7 +271,7 @@ def set_cutaway(light="night", labels=False):
         point_light((0, -3, 4), 220, (0.45, 0.55, 1.0), 2.0); point_light((-2, 0.9, 1.5), 60, (0.4, 0.6, 1.0), 0.5)
         f = flat("flame", (1.0, 0.6, 0.2), 0.9, emit=20); sphere((1.1, 1.6, 11.8), 0.12, f, (1, 1, 1.6), sub=2)
     else:
-        sky("day"); area_light((0, -8, 8), (0, 1, 6), 900, 8, (1, 0.98, 0.95))
+        sky("day"); area_light((0, -8, 8), (0, 1, 6), 450, 8, (1, 0.98, 0.95))
     S2 = stone("stone2", base=LIME, scale=0.6)
     box((-6.5, 3.5, 7), (3, 3, 14), S2, 0.04); box((6.5, 3.5, 7), (3, 3, 14), S2, 0.04)   # wall continues behind the slice
     merlons(-8, 8, 2.5, 14, S2, 2.0)
@@ -340,4 +371,4 @@ def set_gate(light="dawn", open_=True):
     box((-14, -10, 6), (4, 40, 12), S); box((14, -10, 6), (4, 40, 12), S)
     point("gate", (0, 6.2, 3.5))
     sky(light)
-    area_light((0, 14, 4), (0, 0, 1), 1500, 6, (1.0, 0.8, 0.6))
+    area_light((0, 14, 4), (0, 0, 1), 1500, 6, (1.0, 0.8, 0.6)); area_light((2, -10, 6), (0, 2, 1), 1200, 8, (1.0, 0.92, 0.85))

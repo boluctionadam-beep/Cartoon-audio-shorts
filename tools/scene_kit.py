@@ -205,12 +205,9 @@ def ring_wall(cx, cy, r, h, thick, mat, z0=0.0, towers=6, tower_r=None, tmat=Non
 
 def tower(x, y, r, h, mat, z0=0.0, crenel=True, roof=None):
     t = cyl((x, y, z0 + h / 2), r, h, mat, 40, "tower")
-    if crenel:
-        n = max(6, int(2 * math.pi * r / 1.6))
-        for k in range(n):
-            if k % 2: continue
-            a = 2 * math.pi * k / n
-            o = box((x + math.cos(a) * (r - 0.3), y + math.sin(a) * (r - 0.3), z0 + h + 0.55), (1.0, 0.6, 1.1), mat, 0.03, "tmer"); o.rotation_euler.z = a + math.pi / 2
+    if crenel:                                                          # corbelled cap ring instead of loose merlons
+        cyl((x, y, z0 + h + 0.5), r * 1.10, 1.0, mat, 40, "tcap")
+        cyl((x, y, z0 + h - 0.35), r * 1.05, 0.7, mat, 40, "tcap2")
     if roof:
         cyl((x, y, z0 + h + r * 0.9), r * 1.15, r * 1.8, roof, 40, "roof", r2=0.0)
     D = bpy.data.materials.get("slit") or flat("slit", (0.02, 0.015, 0.012), 1.0)
