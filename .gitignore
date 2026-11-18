@@ -3,3 +3,4 @@ out/
 *.onnx
 voices-*.bin
 __pycache__/
+*_raw.png
