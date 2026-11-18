@@ -315,6 +315,18 @@ def draw_full(spec, path, expr="neutral", pose="stand", look=(0, 0), tilt=None, 
         arm_to(sR, (sR[0] + 80, sR[1] + 140), hp)
     else:
         arm_to(sR, (sR[0] + 70, sR[1] + 160), (sR[0] + 60, sR[1] + 330))
+    if prop == "banner":                      # French banner held up in the right hand
+        hp = (sR[0] + 170, sR[1] - 260) if pose == "arms_up" else (sR[0] + 60, sR[1] + 330)
+        top = (hp[0] + 40, 40)
+        c.limb((hp[0] - 10, hp[1] + 120), ((hp[0] + top[0]) / 2, (hp[1] + top[1]) / 2), top, 16, 14, (138, 96, 58, 255), outline=5)
+        fl = [(top[0], top[1] + 10), (top[0] - 330, top[1] + 40), (top[0] - 300, top[1] + 150), (top[0] - 330, top[1] + 250), (top[0], top[1] + 220)]
+        c.shape(fl, (40, 70, 170, 255), outline=10, var=0.25, shade=0.3, shade_col=(10, 20, 60), seed=77)
+        for dx, dy in ((-90, 80), (-220, 95), (-150, 170)):
+            x, y = top[0] + dx, top[1] + dy
+            for ex, ey, rx, ry in ((0, -14, 9, 18), (-13, 0, 10, 7), (13, 0, 10, 7)):
+                c.dot(x + ex, y + ey, rx, ry, (240, 196, 60, 255))
+        c.limb((hp[0] + 120, hp[1] + 60), (hp[0] + 60, hp[1] + 30), hp, 1, 1) if False else None
+        hand(hp)
     draw_head(c, spec, hx, hy, 1.0, expr, tilt if tilt is not None else spec.get("tilt", -0.08), look)
     if low:                                  # small card is enough for the background
         c.im.resize((w // 2, h // 2), Image.LANCZOS).save(path); return path
