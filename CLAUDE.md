@@ -113,6 +113,12 @@ Ricks Clips frames are packed; ours must be too. Before rendering, check EVERY s
   yaw = atan2(dx, -dy).
 - Always do a low-res preview pass of every shot (`preview_frames.py` composed contact sheet) before the full render,
   check cameras inside objects, characters out of frame, empty voids, cut-off signs.
+- Review EVERY shot as a composed frame (background + characters, `approval.py`-style sheet) at 360×640 before its full
+  render, not just the background: s13/s15/s16/s17/s23/s25/s26/s28 of short 09 were redone because this was skipped.
+  Per-shot story dressing goes in `projects/<id>/fix09.py`-style `dress_<name>(sh)` hooks (`extra="<name>"` in the shot).
+- Gotchas: joining parts keeps the ACTIVE object's transform (apply transforms before setting loc/rot); volumetric dust
+  needs density-driven emission or it renders black; exposure rules must list the v2 set names; blurred 2D sprites
+  need padding or they show square edges; low-spp previews can show denoiser squares that vanish at full quality.
 - Sound: `tools/sound.py` (synth SFX + Kokoro crowd voices + Karplus-Strong music by story sections) → `tools/mix.py`
   (music −12, SFX −8, bus compression, −14 LUFS, TP ≤ −1.5) → `tools/qa.py`.
 
