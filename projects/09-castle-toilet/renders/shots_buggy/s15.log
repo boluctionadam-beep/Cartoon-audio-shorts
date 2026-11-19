@@ -1,0 +1,37 @@
+05:05:29 | INFO: Data are loaded, start creating Blender stuff
+05:05:29 | INFO: Blender create Mesh node Cylinder
+05:05:29 | INFO: Blender create Mesh node Plane
+05:05:29 | INFO: glTF import finished in 0.04s
+05:05:29 | INFO: Data are loaded, start creating Blender stuff
+05:05:29 | INFO: Blender create Mesh node Cube.005
+05:05:29 | INFO: Blender create Mesh node Cube.020
+05:05:29 | INFO: Blender create Mesh node Cube.001
+05:05:29 | INFO: glTF import finished in 0.05s
+05:05:30 | INFO: Data are loaded, start creating Blender stuff
+05:05:30 | INFO: Blender create Mesh node Plane.018
+05:05:30 | INFO: Blender create Mesh node Plane.025
+05:05:30 | INFO: Blender create Mesh node Plane.026
+05:05:30 | INFO: Blender create Mesh node Plane.020
+05:05:30 | INFO: Blender create Mesh node Plane.028
+05:05:30 | INFO: Blender create Mesh node Plane.024
+05:05:30 | INFO: Blender create Mesh node Plane.027
+05:05:30 | INFO: Blender create Mesh node Plane.029
+05:05:30 | INFO: Blender create Mesh node Plane.021
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.012
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.030
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.035
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.004
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.032
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.034
+05:05:30 | INFO: Blender create Mesh node DiameterSmall.033
+05:05:30 | INFO: Blender create Mesh node Ring.077
+05:05:30 | INFO: Blender create Mesh node Ring.080
+05:05:30 | INFO: Blender create Mesh node Ring.061
+05:05:30 | INFO: glTF import finished in 0.13s
+05:05:30 | INFO: Data are loaded, start creating Blender stuff
+05:05:30 | INFO: Blender create Mesh node Cube.001
+05:05:30 | INFO: Blender create Mesh node Cube.004
+05:05:30 | INFO: Blender create Mesh node Cylinder.031
+05:05:30 | INFO: glTF import finished in 0.04s
+05:55.532  render           | Saved: '/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/shots/s15.png'
+WROTE renders/shots/s15.png

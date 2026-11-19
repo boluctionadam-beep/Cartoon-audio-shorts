@@ -160,6 +160,24 @@ def set_cutaway2(light="night", labels=False):
     for zz in (2.0, 4.5, 7.0):
         sphere((0.55, 1.2, zz), 0.18, mat("moss"), (0.4, 1, 1.4), sub=2)
     place("wooden_bucket_01", (0.95, 1.1, 10.1), 1.0, 0.4, variant=0)
+    R = mat("rough")
+    for k, zz in enumerate((1.8, 2.9, 4.0, 5.1, 6.2, 7.3, 8.4)):          # protruding stones he climbs on
+        box((-0.5 if k % 2 else 0.5, 1.0, zz), (0.32, 0.9, 0.18), R, 0.03)
+    PR.torch((0.6, 1.05, 6.0), -90, True, 220)
+    for zz in (1.4, 3.6, 5.6, 7.8, 9.2):
+        sphere((-0.6, 1.4, zz), 0.16, mat("moss"), (0.35, 0.9, 1.5), sub=2)
+    SL = flat("slime", (0.32, 0.36, 0.10), 0.15)
+    for zz in (2.4, 4.8, 7.0, 8.8):
+        cyl((0.2, 1.68, zz), 0.05, 0.9, SL, 8)
+    from PIL import Image as _I, ImageDraw as _D
+    wp = os.path.join(TEX, "web.png")
+    if not os.path.exists(wp):
+        im = _I.new("RGBA", (512, 512), (0, 0, 0, 0)); d = _D.Draw(im)
+        for a_ in range(0, 90, 12): d.line([(0, 0), (512 * math.cos(math.radians(a_)), 512 * math.sin(math.radians(a_)))], fill=(230, 230, 235, 200), width=3)
+        for r_ in range(60, 520, 60): d.arc([-r_, -r_, r_, r_], 0, 90, fill=(230, 230, 235, 170), width=3)
+        im.save(wp)
+    for (wx, wz, ry) in ((-0.62, 9.9, 0), (0.62, 9.9, 90)):
+        plane((wx, 0.5, wz), (0.7, 0.7), image_mat("web", wp, emit=0.2), rot=(math.radians(90), math.radians(ry + 180), 0))
     PR.torch((-1.0, 1.65, 11.6), 0, True, 0)
     PR.shield((-6.3, 1.95, 9.0), 0, 0.9, "lions"); PR.banner((6.5, 1.95, 9.5), 0, 1.4, 3.6, "lions")
     scatter("shrub_02", (-16, -5, -3, 3), 8, scale=(0.5, 0.9), seed=4)
@@ -234,9 +252,21 @@ def _world2_base():
     for i in range(14):
         a = rg.uniform(0, 2 * math.pi); rr = rg.uniform(16, 23)
         house(math.cos(a) * rr, math.sin(a) * rr, 0, 4, 3.5, 3.4, math.degrees(a) + 90, rg.choice(["roof_red", "roof_slate"]))
-    for i in range(16):
-        x, y = rg.uniform(120, 160), rg.uniform(-120, 60)
-        house(x, y, -48.5, 5, 4, 3.6, rg.uniform(0, 360), rg.choice(["thatch", "roof_red"]))
+    for i in range(18):                                                   # village on the far bank
+        x, y = rg.uniform(216, 250), rg.uniform(-110, 70)
+        house(x, y, world_h(x, y), 5, 4, 3.6, rg.uniform(0, 360), rg.choice(["thatch", "roof_red"]))
+    for i in range(10):                                                   # houses at the cliff foot (near bank)
+        x, y = rg.uniform(74, 86), rg.uniform(-80, 40)
+        house(x, y, world_h(x, y), 4.5, 3.6, 3.4, rg.uniform(70, 110), "thatch")
+    for i, (bx, by) in enumerate(((140, -40), (165, 10), (128, 30), (175, -75))):   # boats on the Seine
+        hull = box((bx, by, -48.7), (5.0, 1.8, 0.8), PR.M("wood"), 0.15); hull.rotation_euler.z = math.radians(15 + i * 40)
+        cyl((bx, by, -46.0), 0.08, 5.0, PR.M("darkwood"), 6)
+        sl = plane((bx + 0.6, by, -45.6), (1.6, 2.8), flat("sail", (0.92, 0.88, 0.78), 0.9), rot=(math.radians(90), 0, math.radians(15 + i * 40)))
+    for (r0, r1) in ((0, 13), (15, 25)):                                  # paved / dirt courtyards inside the rings
+        cyl((0, 0, 0.06 + r0 * 0.001), r1, 0.1, mat("cobble") if r0 == 0 else mat("dirt"), 96)
+    for i in range(10):
+        a = rg.uniform(0, 2 * math.pi); rr = rg.uniform(16, 23)
+        house(math.cos(a) * rr, math.sin(a) * rr, 0, 3.6, 3.2, 3.0, math.degrees(a) + 90, rg.choice(["roof_red", "thatch"]))
     for i in range(6):
         PR.flag_pole((math.cos(i) * 26, math.sin(i) * 26, 14.5), 4, (0.62, 0.06, 0.06), 2.0)
 
@@ -256,7 +286,7 @@ def set_world2(variant="normal", light="golden", camp=False, flags="english", sc
     finally:
         S0.WORLD_CACHE = _orig
     if camp: _camp_dressing()
-    fog(0.0012, (0.95, 0.88, 0.78) if light in ("golden", "dusk", "dawn") else (0.85, 0.9, 1.0), 0.4, (700, 700, 200), (0, 0, 40))
+    fog(0.0006, (0.95, 0.88, 0.78) if light in ("golden", "dusk", "dawn") else (0.85, 0.9, 1.0), 0.4, (700, 700, 200), (0, 0, 40))
 
 
 def _apply_variants(S0, variant, light, camp, flags, scaffold, trebuchet, breach, smoke):

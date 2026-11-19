@@ -21,7 +21,7 @@ SHOTS = [
       chars=[dict(n="bogis", e="determined", p="arms_up", at=(2.0, 2.85, 6.35), baked=True)],
       fx=[dict(t="flies", pt="hole")], sfx=["scrape"], note="Low angle: Bogis's legs dangling out of the toilet hole in the wall."),
  dict(id="s03", at="This was", set="world2", opt=dict(light="golden"), move="out", amt=0.10,
-      cam=dict(loc=(185, -150, 40), target=(10, 6, -6), lens=32), chars=[], sfx=["wind", "birds"], note="Aerial: Château Gaillard on its cliff above the Seine."),
+      cam=dict(loc=(-118, -128, 58), target=(16, 10, 2), lens=34), chars=[], sfx=["wind", "birds"], note="Aerial: Château Gaillard on its cliff above the Seine."),
  dict(id="s04", at="the toughest", set="world2", opt=dict(light="golden"), move="in", amt=0.08,
       cam=dict(loc=(-50, -52, None), target=(0, 0, 16), lens=22, dz=1.8), chars=[], sfx=["whoosh"], note="Low angle up at walls, towers and the keep."),
  dict(id="s05", at="Richard the", set="world2", opt=dict(light="golden", scaffold=True, flags=None), move="out", amt=0.10,
@@ -32,7 +32,7 @@ SHOTS = [
  dict(id="s06", at="Three rings", set="world2", opt=dict(light="golden"), move="in", amt=0.10,
       cam=dict(loc=(-20, -70, 120), target=(0, 0, 0), lens=30), chars=[], sfx=["whoosh"], note="Top-down: three rings of walls + the moat."),
  dict(id="s07", at="towers everywhere", set="world2", opt=dict(light="golden"), move="up", amt=0.08,
-      cam=dict(loc=(9, -9, 42), target=(-4, -26, 4), lens=18), chars=[], sfx=["whoosh"], note="Worm's-eye: towers everywhere."),
+      cam=dict(loc=(-50, -44, 20), target=(0, 2, 13), lens=26), chars=[], sfx=["whoosh"], note="Worm's-eye: towers everywhere."),
  dict(id="s08", at="The French king", set="world2", opt=dict(light="dusk", camp=True, trebuchet=True), move="in", amt=0.08,
       cam=dict(loc=(-88, -74, None), target=(-30, -15, 10), lens=26, dz=1.6, dof="philip", fstop=2.8),
       chars=[dict(n="philip", e="angry", p="arms_up", look=(0.8, -0.4), at=(-83.1, -69.6, None), anim="shake")],
@@ -291,7 +291,7 @@ def build(sh):
     if sh.get("sign"):
         sg = sh["sign"]; x, y = sg["at"]; z = gz(x, y) + sg.get("z", 1.2)
         img = text_image(os.path.join(S.TEX, f"sign_{sh['id']}.png"), sg["text"], font_size=150 if len(sg["text"]) > 6 else 220)
-        p = mksign(img, (x, y, z), sg["w"], sg["h"], math.radians(sg.get("yaw", 0)))
+        p = mksign(img, (x, y, z), sg["w"], sg["h"], math.radians(sg.get("yaw", 0)), post=False)
         cyl((x, y + 0.05, (z + gz(x, y)) / 2), 0.07, z - gz(x, y), wood("post"), 8)
     for i, (x, y) in enumerate(sh.get("tents", [])):
         from scene_kit import flat as _flat, cyl as _cyl

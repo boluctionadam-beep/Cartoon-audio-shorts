@@ -1,0 +1,32 @@
+04:23:16 | INFO: Data are loaded, start creating Blender stuff
+04:23:16 | INFO: Blender create Mesh node Plane.018
+04:23:16 | INFO: Blender create Mesh node Plane.025
+04:23:16 | INFO: Blender create Mesh node Plane.026
+04:23:16 | INFO: Blender create Mesh node Plane.020
+04:23:16 | INFO: Blender create Mesh node Plane.028
+04:23:16 | INFO: Blender create Mesh node Plane.024
+04:23:16 | INFO: Blender create Mesh node Plane.027
+04:23:16 | INFO: Blender create Mesh node Plane.029
+04:23:16 | INFO: Blender create Mesh node Plane.021
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.012
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.030
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.035
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.004
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.032
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.034
+04:23:16 | INFO: Blender create Mesh node DiameterSmall.033
+04:23:16 | INFO: Blender create Mesh node Ring.077
+04:23:16 | INFO: Blender create Mesh node Ring.080
+04:23:16 | INFO: Blender create Mesh node Ring.061
+04:23:16 | INFO: glTF import finished in 0.11s
+04:23:16 | INFO: Data are loaded, start creating Blender stuff
+04:23:16 | INFO: Blender create Mesh node Cube.005
+04:23:16 | INFO: Blender create Mesh node Cube.020
+04:23:16 | INFO: Blender create Mesh node Cube.001
+04:23:16 | INFO: glTF import finished in 0.02s
+04:23:16 | INFO: Data are loaded, start creating Blender stuff
+04:23:16 | INFO: Blender create Mesh node Cylinder
+04:23:16 | INFO: Blender create Mesh node Plane
+04:23:16 | INFO: glTF import finished in 0.02s
+05:48.775  render           | Saved: '/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/shots/s11.png'
+WROTE renders/shots/s11.png

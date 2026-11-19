@@ -1,0 +1,49 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "philip",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/philip_determined_stand_+0.8_-0.3_map.png",
+   "baked": false,
+   "quad": [
+    [
+     169.3,
+     1124.1,
+     6.56
+    ],
+    [
+     736.2,
+     1138.1,
+     6.684
+    ],
+    [
+     733.5,
+     2167.5,
+     6.378
+    ],
+    [
+     138.9,
+     2173.2,
+     6.254
+    ]
+   ],
+   "dist": 6.51
+  }
+ ],
+ "points": {
+  "castle": [
+   -322.5,
+   1345.2,
+   76.399
+  ],
+  "keep_top": [
+   690.9,
+   841.7,
+   98.556
+  ]
+ }
+}

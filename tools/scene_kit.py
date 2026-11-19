@@ -114,9 +114,9 @@ def wood(name="wood", c0=(0.30, 0.17, 0.08), c1=(0.52, 0.32, 0.16), planks=True)
     return m
 
 
-def water(name="water", col=(0.06, 0.30, 0.48)):
+def water(name="water", col=(0.04, 0.34, 0.42)):
     m = bpy.data.materials.new(name); N, L = _nodes(m); b = N["Principled BSDF"]
-    b.inputs["Base Color"].default_value = (*col, 1); b.inputs["Roughness"].default_value = 0.06
+    b.inputs["Base Color"].default_value = (*col, 1); b.inputs["Roughness"].default_value = 0.03; b.inputs["IOR"].default_value = 1.33
     tc = N.new("ShaderNodeTexCoord"); nz = N.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 2.5
     L.new(tc.outputs["Object"], nz.inputs["Vector"]); bp = N.new("ShaderNodeBump"); bp.inputs["Strength"].default_value = 0.15
     L.new(nz.outputs["Fac"], bp.inputs["Height"]); L.new(bp.outputs["Normal"], b.inputs["Normal"])
@@ -137,7 +137,7 @@ def image_mat(name, path, emit=0.0, alpha=True):
 # ------------------------------------------------------------------ geometry helpers
 def box(loc, size, mat, bevel=0.0, name="box", rot=(0, 0, 0)):
     bpy.ops.mesh.primitive_cube_add(location=loc, rotation=rot); o = bpy.context.object; o.name = name
-    o.scale = (size[0] / 2, size[1] / 2, size[2] / 2); bpy.ops.object.transform_apply(scale=True)
+    o.scale = (size[0] / 2, size[1] / 2, size[2] / 2); bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)   # keep the origin at loc
     if bevel:
         bv = o.modifiers.new("bv", "BEVEL"); bv.width = bevel; bv.segments = 2
     if mat: o.data.materials.append(mat)
@@ -192,10 +192,12 @@ def ring_wall(cx, cy, r, h, thick, mat, z0=0.0, towers=6, tower_r=None, tmat=Non
         a = 2 * math.pi * (i + 0.5) / n
         if gap and gap[0] < a < gap[1]: continue
         x, y = cx + math.cos(a) * r, cy + math.sin(a) * r
-        o = box((x, y, z0 + h / 2), (seg * 1.04, thick, h), mat, 0.0, "seg"); o.rotation_euler.z = a + math.pi / 2
-        if crenel and i % 2 == 0:
-            m = box((cx + math.cos(a) * (r - thick * 0.35), cy + math.sin(a) * (r - thick * 0.35), z0 + h + 0.6), (seg * 0.55, 0.7, 1.2), mat, 0.03, "mer")
-            m.rotation_euler.z = a + math.pi / 2
+        o = box((x, y, z0 + h / 2), (seg * 1.16, thick, h), mat, 0.0, "seg"); o.rotation_euler.z = a + math.pi / 2
+        if crenel:
+            for off in (-0.25, 0.25):
+                aa = a + off * seg / r
+                m = box((cx + math.cos(aa) * (r - thick * 0.38), cy + math.sin(aa) * (r - thick * 0.38), z0 + h + 0.45), (seg * 0.28, 0.55, 0.9), mat, 0.02, "mer")
+                m.rotation_euler.z = aa + math.pi / 2
     tr = tower_r or thick * 1.6
     for k in range(towers):
         a = 2 * math.pi * k / towers + 0.3
@@ -369,7 +371,7 @@ def sky(preset="golden"):
         s.data.energy = 1.1; s.data.color = (0.55, 0.68, 1.0); s.data.angle = math.radians(1.5)
         return s
     p = P[preset]
-    COLS = {"day": ((0.70, 0.85, 1.0), (0.12, 0.40, 0.95)), "golden": ((1.0, 0.82, 0.60), (0.16, 0.44, 0.95)),
+    COLS = {"day": ((0.70, 0.85, 1.0), (0.12, 0.40, 0.95)), "golden": ((0.98, 0.86, 0.70), (0.14, 0.42, 0.95)),
             "dawn": ((1.0, 0.74, 0.58), (0.26, 0.44, 0.88)), "dusk": ((1.0, 0.58, 0.36), (0.28, 0.26, 0.66))}
     hor, zen = COLS[preset]
     tc = WN.new("ShaderNodeTexCoord"); sep = WN.new("ShaderNodeSeparateXYZ"); WL.new(tc.outputs["Generated"], sep.inputs[0])

@@ -1,0 +1,20 @@
+03:33:55 | INFO: Data are loaded, start creating Blender stuff
+03:33:55 | INFO: Blender create Mesh node Cylinder
+03:33:55 | INFO: Blender create Mesh node Plane
+03:33:55 | INFO: glTF import finished in 0.02s
+03:33:55 | INFO: Data are loaded, start creating Blender stuff
+03:33:55 | INFO: Blender create Mesh node Plane.024
+03:33:55 | INFO: Blender create Mesh node Plane.029
+03:33:55 | INFO: Blender create Mesh node Plane.041
+03:33:55 | INFO: Blender create Mesh node Plane.036
+03:33:55 | INFO: glTF import finished in 0.05s
+03:33:55 | INFO: Data are loaded, start creating Blender stuff
+03:33:55 | INFO: Blender create Mesh node modelShape.005
+03:33:56 | INFO: Blender create Mesh node modelShape.002
+03:33:56 | INFO: Blender create Mesh node modelShape
+03:33:56 | INFO: Blender create Mesh node medium.001
+03:33:56 | INFO: Blender create Mesh node modelShape.003
+03:33:56 | INFO: Blender create Mesh node mesh1-geometry.003
+03:33:56 | INFO: glTF import finished in 0.11s
+03:03.321  render           | Saved: '/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/shots/s01.png'
+WROTE renders/shots/s01.png

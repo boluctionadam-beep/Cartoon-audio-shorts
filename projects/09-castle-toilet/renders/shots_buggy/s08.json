@@ -1,0 +1,54 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "philip",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/philip_angry_arms_up_+0.8_-0.4.png",
+   "baked": false,
+   "quad": [
+    [
+     720.3,
+     1580.0,
+     6.672
+    ],
+    [
+     1208.7,
+     1575.4,
+     6.601
+    ],
+    [
+     1238.8,
+     2511.9,
+     6.158
+    ],
+    [
+     715.2,
+     2506.2,
+     6.229
+    ]
+   ],
+   "dist": 6.64
+  }
+ ],
+ "points": {
+  "castle": [
+   313.8,
+   1564.1,
+   101.647
+  ],
+  "keep_top": [
+   975.5,
+   1196.3,
+   122.034
+  ],
+  "treb_tip": [
+   667.0,
+   1128.9,
+   50.456
+  ]
+ }
+}

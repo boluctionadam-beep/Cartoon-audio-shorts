@@ -1,0 +1,66 @@
+00:00.518  blend            | Read blend: "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/work/world2_base.blend"
+04:29:37 | INFO: Data are loaded, start creating Blender stuff
+04:29:37 | INFO: Blender create Mesh node Cylinder
+04:29:37 | INFO: Blender create Mesh node Plane
+04:29:37 | INFO: glTF import finished in 0.11s
+04:29:37 | INFO: Data are loaded, start creating Blender stuff
+04:29:37 | INFO: Blender create Mesh node Cube.005
+04:29:37 | INFO: Blender create Mesh node Cube.020
+04:29:37 | INFO: Blender create Mesh node Cube.001
+04:29:37 | INFO: glTF import finished in 0.10s
+04:29:38 | INFO: Data are loaded, start creating Blender stuff
+04:29:38 | INFO: Blender create Mesh node Plane.018
+04:29:38 | INFO: Blender create Mesh node Plane.025
+04:29:38 | INFO: Blender create Mesh node Plane.026
+04:29:38 | INFO: Blender create Mesh node Plane.020
+04:29:38 | INFO: Blender create Mesh node Plane.028
+04:29:38 | INFO: Blender create Mesh node Plane.024
+04:29:38 | INFO: Blender create Mesh node Plane.027
+04:29:38 | INFO: Blender create Mesh node Plane.029
+04:29:38 | INFO: Blender create Mesh node Plane.021
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.012
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.030
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.035
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.004
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.032
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.034
+04:29:38 | INFO: Blender create Mesh node DiameterSmall.033
+04:29:38 | INFO: Blender create Mesh node Ring.077
+04:29:38 | INFO: Blender create Mesh node Ring.080
+04:29:38 | INFO: Blender create Mesh node Ring.061
+04:29:38 | INFO: glTF import finished in 0.24s
+04:29:45 | INFO: Data are loaded, start creating Blender stuff
+04:29:45 | INFO: Blender create Mesh node Plane.037
+04:29:45 | INFO: Blender create Mesh node Plane.038
+04:29:45 | INFO: Blender create Mesh node Plane.039
+04:29:45 | INFO: Blender create Mesh node Plane.042
+04:29:45 | INFO: Blender create Mesh node Plane.043
+04:29:45 | INFO: Blender create Mesh node Plane.045
+04:29:45 | INFO: Blender create Mesh node Plane.047
+04:29:45 | INFO: Blender create Mesh node Plane.048
+04:29:45 | INFO: Blender create Mesh node Plane.050
+04:29:45 | INFO: Blender create Mesh node Plane.051
+04:29:45 | INFO: Blender create Mesh node Plane.053
+04:29:45 | INFO: Blender create Mesh node Plane.054
+04:29:45 | INFO: Blender create Mesh node Plane.055
+04:29:45 | INFO: Blender create Mesh node Plane.056
+04:29:45 | INFO: Blender create Mesh node Plane.057
+04:29:45 | INFO: Blender create Mesh node Plane.058
+04:29:45 | INFO: Blender create Mesh node Plane.059
+04:29:45 | INFO: glTF import finished in 0.23s
+04:29:46 | INFO: Data are loaded, start creating Blender stuff
+04:29:46 | INFO: Blender create Mesh node modelShape.005
+04:29:46 | INFO: Blender create Mesh node modelShape.002
+04:29:46 | INFO: Blender create Mesh node modelShape
+04:29:46 | INFO: Blender create Mesh node medium.001
+04:29:46 | INFO: Blender create Mesh node modelShape.003
+04:29:46 | INFO: Blender create Mesh node mesh1-geometry.003
+04:29:46 | INFO: glTF import finished in 0.31s
+04:29:47 | INFO: Data are loaded, start creating Blender stuff
+04:29:47 | INFO: Blender create Mesh node Plane.024
+04:29:47 | INFO: Blender create Mesh node Plane.029
+04:29:47 | INFO: Blender create Mesh node Plane.041
+04:29:47 | INFO: Blender create Mesh node Plane.036
+04:29:47 | INFO: glTF import finished in 0.20s
+13:58.638  render           | Saved: '/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/shots/s12.png'
+WROTE renders/shots/s12.png

@@ -134,7 +134,7 @@ def _world_base():
         if 45 < x < 120: continue
         tree(x, y, world_h(x, y), rg.uniform(1.2, 2.0), (TR, LF))
     for i in range(30):
-        x = rg.uniform(200, 320); y = rg.uniform(-250, 250); tree(x, y, -48, rg.uniform(1.4, 2.2), (TR, LF))
+        x = rg.uniform(215, 320); y = rg.uniform(-250, 250); tree(x, y, world_h(x, y), rg.uniform(1.4, 2.2), (TR, LF))
     _tag(before, "tree")
     HL = noisy("hills", (0.18, 0.34, 0.12), (0.32, 0.46, 0.18), 0.02, bump=0)
     for i in range(10):
