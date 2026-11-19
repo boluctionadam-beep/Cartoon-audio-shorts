@@ -220,7 +220,12 @@ def set_chapel2():
 def set_gate2(light="dawn", open_=True):
     from sets09 import set_gate
     set_gate(light, open_)
-    plane((0, -5, 0.01), (40, 30), mat("cobble"))
+    plane((0, -5, 0.08), (40, 30), mat("cobble"))                       # above the bumpy dirt grid (was poking through)
+    for o in bpy.data.objects:                                           # real planks on the gate leaves
+        if o.type == "MESH" and o.data.materials and o.data.materials[0] and o.data.materials[0].name.startswith("door"):
+            o.data.materials[0] = mat("planks")
+        elif o.type == "MESH" and o.data.materials and o.data.materials[0] and o.data.materials[0].name.startswith("stone"):
+            o.data.materials[0] = mat("wall")                            # real sandstone blocks instead of flat procedural bricks
     for tx in (-3.4, 3.4): PR.torch((tx, 5.85, 4.2), 0, True, 200)
     PR.banner((-6.0, 5.85, 8.5), 0, 1.6, 4.0, "lions"); PR.banner((6.0, 5.85, 8.5), 0, 1.6, 4.0, "lions")
     PR.cart((-6.6, 0.6, 0), 80, "sacks"); PR.weapon_rack((6.8, 3.6, 0), 180); PR.cauldron((-9.0, -3.0, 0), fire=True)

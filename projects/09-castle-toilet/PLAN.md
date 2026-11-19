@@ -16,7 +16,7 @@ Voice: audio/voice.wav (61.2 s, tightened ×1.1 from 72.1 s). 1440×2560, 60 fps
 | s10 | 17.21–18.74 | Richard just laughed. | battle2 golden | in 8% | **richard** laughing · stand · look (0, 0) |  / laugh | Richard on the battlements, laughing. |
 | s11 | 18.49–20.82 | He'd hold it even with walls of butter. | battle2 golden | out 8% | **richard** smug · hips · look (0.6, 0) |  / squish | Walls of butter (with a knife in it). Richard smug. |
 | s12 | 20.57–23.14 | So in twelve oh three, the French came. | world2 golden | out 10% | ; crowd ×36 determined/angry/determined/neutral (march) |  / march, drums | 1203: the French army marches on the castle. |
-| s13 | 22.89–23.82 | They dug, | wall3 day | in 10% | **gaston** determined · stand · look (0, 0.5); **tibo** angry · stand · look (0, 0.5); crowd ×6 determined/angry (dig) | dust / dig, dig, dig | Miners digging at the foot of the wall. |
+| s13 | 22.89–23.82 | They dug, | wall3 day | in 10% | **gaston** determined · stand · look (0.3, 0.4); **tibo** angry · stand · look (-0.3, 0.4); crowd ×6 determined/angry (dig) | dust / dig, dig, dig | Miners digging at the foot of the wall. |
 | s14 | 23.57–24.71 | they smashed, | world2 golden | in 12% | — | boulder, shake / catapult, boom | Trebuchet hurls a boulder; impact. |
 | s15 | 24.46–26.47 | they starved the place for months. | gate2 golden | in 8% | **roger** sad · stand · look (0, 0.6); crowd ×4 sad (idle) |  / stomach, wind | Inside: Roger and the defenders, hungry and sad, months pass. |
 | s16 | 26.22–28.11 | The first wall fell. | world2 golden | in 10% | ; crowd ×14 laughing/laughing/determined (cheer) | shake / collapse, cheer | The outer wall collapses, French cheer. |

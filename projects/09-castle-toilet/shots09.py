@@ -53,15 +53,15 @@ SHOTS = [
       crowd=dict(n=36, area=(-62, -42, -62, -44), colors="FR", expr=("determined", "angry", "determined", "neutral"), pose=("stand", "arms_up", "stand"), anim="march", seed=200),
       sign=dict(text="1203", at=(-72.2, -70.6), w=1.4, h=0.8, yaw=-45), sfx=["march", "drums"], note="1203: the French army marches on the castle."),
  dict(id="s13", at="They dug", set="wall3", opt=dict(light="day", grass=False, rubble=True), move="in", amt=0.10,
-      cam=dict(loc=(0.5, -9.0, 1.6), target=(0, 4, 1.8), lens=20),
-      chars=[dict(n="gaston", e="determined", p="stand", look=(0, 0.5), at=(-1.4, 1.4, 0), anim="dig", prop="shovel"), dict(n="tibo", e="angry", p="stand", look=(0, 0.5), at=(1.6, 1.0, 0), anim="dig", prop="shovel")],
+      cam=dict(loc=(0.2, -4.0, 1.05), target=(0.1, 3.0, 1.5), lens=22, dof="gaston", fstop=4.0), extra="mine",
+      chars=[dict(n="gaston", e="determined", p="stand", look=(0.3, 0.4), at=(-1.05, 1.1, 0), anim="dig", prop="shovel"), dict(n="tibo", e="angry", p="stand", look=(-0.3, 0.4), at=(1.2, 0.85, 0), anim="dig", prop="shovel")],
       crowd=dict(n=6, area=(-6, 6, 1.0, 2.8), colors="FR", expr=("determined", "angry"), pose=("arms_up",), anim="dig", seed=230),
       fx=[dict(t="dust", y=0.80)], sfx=["dig", "dig", "dig"], note="Miners digging at the foot of the wall."),
  dict(id="s14", at="they smashed", set="world2", opt=dict(light="golden", camp=True, trebuchet=True), move="in", amt=0.12,
       cam=dict(loc=(-78, -54, None), target=(-36, -12, 8), lens=22, dz=2.0),
       fx=[dict(t="boulder", a="treb_tip", b="castle"), dict(t="shake", at=0.55)], sfx=["catapult", "boom"], note="Trebuchet hurls a boulder; impact."),
  dict(id="s15", at="they starved", set="gate2", opt=dict(light="golden", open_=False), move="in", amt=0.08,
-      cam=dict(loc=(1.0, -7.0, 1.7), target=(-0.5, 0, 1.5), lens=26, dof="roger", fstop=2.8),
+      cam=dict(loc=(1.0, -7.0, 1.7), target=(-0.5, 0, 1.5), lens=26, dof="roger", fstop=2.8), extra="hunger",
       chars=[dict(n="roger", e="sad", p="stand", look=(0, 0.6), at=(-0.6, -1.8, 0), prop="bowl")],
       crowd=dict(n=4, area=(-4.5, 4.0, 0.0, 3.5), colors="EN", expr=("sad",), pose=("stand", "shrug"), anim="idle", seed=260),
       sfx=["stomach", "wind"], note="Inside: Roger and the defenders, hungry and sad, months pass."),
@@ -280,6 +280,8 @@ def build(sh):
     elif sh["set"] == "toilet": S.set_toilet_room()
     elif sh["set"] == "chapel": S.set_chapel()
     elif sh["set"] == "gate": S.set_gate(**o)
+    if sh.get("extra"):
+        import fix09; fix09.apply(sh)
     gz = (lambda x, y: S.world_h(x, y)) if sh["set"] in ("world", "world2") else (lambda x, y: 0.0)
     objs = {}
     for c in sh.get("chars", []):
