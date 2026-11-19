@@ -115,3 +115,59 @@ def dress_hunger(sh):
 
 def apply(sh):
     if sh.get("extra"): globals()["dress_" + sh["extra"]](sh)
+
+
+def _dust_mat(dens=0.8, col=(0.82, 0.72, 0.58), glow=0.75):
+    m = bpy.data.materials.new("dustvol"); m.use_nodes = True; nt = m.node_tree; N = nt.nodes; L = nt.links
+    for n in list(N): N.remove(n)
+    out = N.new("ShaderNodeOutputMaterial"); pv = N.new("ShaderNodeVolumePrincipled"); tc = N.new("ShaderNodeTexCoord")
+    nz = N.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 2.6; nz.inputs["Detail"].default_value = 8.0; nz.inputs["Roughness"].default_value = 0.62
+    ln = N.new("ShaderNodeVectorMath"); ln.operation = "LENGTH"; L.new(tc.outputs["Object"], ln.inputs[0])
+    fall = N.new("ShaderNodeMapRange"); fall.inputs["From Min"].default_value = 0.35; fall.inputs["From Max"].default_value = 1.0
+    fall.inputs["To Min"].default_value = 1.0; fall.inputs["To Max"].default_value = 0.0; L.new(ln.outputs["Value"], fall.inputs["Value"])
+    L.new(tc.outputs["Object"], nz.inputs["Vector"])
+    cr = N.new("ShaderNodeMapRange"); cr.inputs["From Min"].default_value = 0.46; cr.inputs["From Max"].default_value = 0.60; L.new(nz.outputs["Fac"], cr.inputs["Value"])
+    m1 = N.new("ShaderNodeMath"); m1.operation = "MULTIPLY"; L.new(cr.outputs["Result"], m1.inputs[0]); L.new(fall.outputs["Result"], m1.inputs[1])
+    m2 = N.new("ShaderNodeMath"); m2.operation = "MULTIPLY"; m2.inputs[1].default_value = dens; L.new(m1.outputs[0], m2.inputs[0])
+    L.new(m2.outputs[0], pv.inputs["Density"]); pv.inputs["Color"].default_value = (*col, 1.0); pv.inputs["Anisotropy"].default_value = 0.0
+    em = N.new("ShaderNodeMath"); em.operation = "MULTIPLY"; em.inputs[1].default_value = glow; L.new(m2.outputs[0], em.inputs[0])
+    L.new(em.outputs[0], pv.inputs["Emission Strength"]); pv.inputs["Emission Color"].default_value = (*col, 1.0)   # self-lit dust (no dark core)
+    L.new(pv.outputs["Volume"], out.inputs["Volume"]); return m
+
+
+def dress_breach(sh):
+    """s16 'The first wall collapsed': volumetric dust instead of grey balls, masonry blocks instead of crystal rubble, French banners."""
+    from sets09 import world_h
+    rubble, smoke = [], []
+    for o in list(bpy.data.objects):
+        mn = o.data.materials[0].name if o.type == "MESH" and o.data.materials and o.data.materials[0] else ""
+        if mn.startswith("smoke"): smoke.append(o.location.copy()); bpy.data.objects.remove(o)
+        elif mn.startswith("stone_d") and o.name.startswith("Ico"): rubble.append((o.location.copy(), max(o.dimensions) / 2)); bpy.data.objects.remove(o)
+    R, D = S2.mat("rough"), S2.mat("dirt"); rg = random.Random(5)
+    bx, by = -6 + math.cos(2.88) * 40, math.sin(2.88) * 40                     # breach centre
+    sphere((bx, by, world_h(bx, by) - 0.6), 7.0, D, (1.0, 1.4, 0.32), sub=3)    # spill of earth and mortar under the stones
+    for (p, r) in rubble:                                                        # fallen wall blocks, tumbled
+        s = r * rg.uniform(0.7, 1.0)
+        b = box((p.x, p.y, world_h(p.x, p.y) + s * 0.35), (s * 1.6, s * 1.0, s * 0.8), R, 0.06)
+        b.rotation_euler = (rg.uniform(-0.5, 0.5), rg.uniform(-0.5, 0.5), rg.uniform(0, 3.1))
+    for i in range(40):                                                          # small chips
+        a = rg.uniform(2.5, 3.25); rr = 40 + rg.uniform(-6, 7); x, y = -6 + math.cos(a) * rr, math.sin(a) * rr
+        b = box((x, y, world_h(x, y) + 0.1), (rg.uniform(0.2, 0.5),) * 3, R, 0.03); b.rotation_euler = (rg.uniform(0, 3), rg.uniform(0, 3), rg.uniform(0, 3))
+    DM = _dust_mat()
+    for i in range(10):                                                          # billowing dust cloud rising from the breach
+        h = i / 9.0
+        x, y = bx + rg.uniform(-4, 4) - h * 3, by + rg.uniform(-6, 6)
+        r = rg.uniform(2.8, 4.2) * (1 + h * 0.5)
+        sphere((x, y, world_h(x, y) + 1.5 + h * 14), 1.0, DM, (r, r, r * 0.75), sub=3)
+    # French side: lily banners on poles and spears stuck in the ground near the cheering crowd
+    side = _cam_frame(sh); W = PR.M("darkwood")
+    for (u, v) in ((9.0, -2.6), (12.5, 2.4)):
+        x, y = side(u, v); z = world_h(x, y)
+        cyl((x, y, z + 2.6), 0.05, 5.2, W, 8); PR.banner((x, y + 0.05, z + 4.0), 0, 1.0, 1.8, "lilies", (30, 50, 150), (240, 200, 60))
+    for i in range(6):
+        x, y = side(rg.uniform(5, 14), rg.uniform(-3.5, 3.5)); z = world_h(x, y)
+        sp = cyl((x, y, z + 1.2), 0.025, 2.4, PR.M("wood"), 6); sp.rotation_euler = (rg.uniform(-0.25, 0.25), rg.uniform(-0.25, 0.25), 0)
+    for i in range(3):
+        x, y = side(rg.uniform(4, 8), rg.uniform(-2, 2)); z = world_h(x, y)
+        img = PR.heraldry("lilies", (30, 50, 150), (240, 200, 60), 384, 448, "shield")     # shield lying flat in the grass
+        plane((x, y, z + 0.1), (0.6, 0.7), PR.K.image_mat("shield_lilies", img, emit=0.05), rot=(0.0, 0.0, rg.uniform(0, 6.2)))
