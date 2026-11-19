@@ -76,6 +76,20 @@ guards, spectators, prisoners) is background and must NOT get the same effort:
   silhouettes or tiny blobs; very far = instanced copies of the same few cards. Never place extras in front of a hero's face.
 - In Blender reuse the same card images on many planes (instancing) instead of drawing new ones per person.
 
+## 5c. Detail density — every shot must be full (user feedback: "empty, cheap, boring")
+Ricks Clips frames are packed; ours must be too. Before rendering, check EVERY shot against this list:
+1. **Purpose-built set for the beat**, never a bare wall/field: 10+ themed props in frame (barrels, crates, sacks, ropes,
+   tools, weapons, banners, shields, carts, fences, hay, candles, food, scrolls, signs, posters, carpets, tapestries).
+2. **Tight composition**: subject fills 40-60% of the frame; something in the FOREGROUND cropped by the frame edge
+   (grass, fence, post, bars, banner, barrel) and blurred by depth of field. No large empty sky or wall areas.
+3. **Practical light in frame** where it makes sense (torch, lantern, candle, fire, window glow) with bloom; strong
+   colour accents (gold trims, red/blue banners), complementary palettes.
+4. **Ornament & diegetic text**: emblems, patterns, gold edges, signs, labels, calendars, posters — readable, never mirrored.
+5. **Characters hold or use something** that tells the story (spear, shovel, bowl, goblet, map, torch, banner).
+6. **Something moves besides the characters**: dust motes in light, embers, smoke, flags, birds, leaves, rain/snow, flies.
+7. **Background is alive**: buildings with lit windows, towers, tents, crowd doing things, landscape detail.
+8. **No two shots share the same framing**; inserts/close-ups of key objects break up the character shots.
+
 ## 6. Code map
 - `tools/charkit.py` — drawing primitives (brush-outlined shapes, shading, tapered limbs, heads, hair, eyes, brows, mouths).
 - `tools/cast.py` — character system: `draw_full(spec, out, expr, pose, look)`, `draw_head(...)`, `lineup(...)`.
