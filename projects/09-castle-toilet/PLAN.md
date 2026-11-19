@@ -20,7 +20,7 @@ Voice: audio/voice.wav (61.2 s, tightened ×1.1 from 72.1 s). 1440×2560, 60 fps
 | s14 | 23.57–24.71 | they smashed, | world2 golden | in 12% | — | boulder, shake / catapult, boom | Trebuchet hurls a boulder; impact. |
 | s15 | 24.46–26.47 | they starved the place for months. | gate2 golden | in 8% | **roger** sad · stand · look (0, 0.6); crowd ×4 sad (idle) |  / stomach, wind | Inside: Roger and the defenders, hungry and sad, months pass. |
 | s16 | 26.22–28.11 | The first wall fell. | world2 golden | in 10% | ; crowd ×14 laughing/laughing/determined (cheer) | shake / collapse, cheer | The outer wall collapses, French cheer. |
-| s17 | 27.86–29.95 | The second wouldn't budge. | wall3 day | out 8% | **gaston** shocked · shrug · look (-0.4, -0.3); **tibo** angry · hips · look (-0.6, 0) |  / thud, boing | Battering ram bounces off the second wall. Gaston dazed, Tibo furious. |
+| s17 | 27.86–29.95 | The second wouldn't budge. | wall3 day | out 8% | **gaston** shocked · shrug · look (0.4, -0.3); **tibo** angry · hips · look (-0.6, 0) |  / thud, boing | Battering ram bounces off the second wall. Gaston dazed, Tibo furious. |
 | s18 | 29.70–31.35 | Then, the story goes, | wall3 golden | in 10% | **bogis** neutral → curious @story goes · hold_spear · look (0, 0) |  / birds | Meet Bogis (neutral → curious). |
 | s19 | 31.10–33.51 | a soldier named Bogis looked up and | wall3 golden | in 8% | **bogis** curious · point_up · look (0.5, -0.6) |  / sting | Bogis looks up and points (approved frame). |
 | s20 | 33.26–36.23 | spotted a little stone box sticking out of the wall. | wall3 golden | in 14% | — | flies / flies | POV: the little stone box sticking out of the wall. |
