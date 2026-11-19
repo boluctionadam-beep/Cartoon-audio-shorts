@@ -202,6 +202,7 @@ def set_toilet2():
     for i in range(3): cyl((2.65, 0.3 + i * 0.4, 2.45), 0.09, 0.26, flat("jar", (0.55, 0.32, 0.18), 0.4), 12)
     plane((2.75, -0.6, 2.4), (0.02, 1.0), PR.M("rope"), rot=(0, math.radians(90), 0))
     PR.rope_coil((-1.9, -0.4, 0)); PR.sack((1.8, -1.2, 0), 20, 0.8)
+    import fix09; fix09.dress_privy()
 
 
 # ================================================================== CHAPEL v2
@@ -214,6 +215,7 @@ def set_chapel2():
     PR.chandelier((0.8, 3.5, 5.2)); PR.banner((-2.2, 6.6, 4.2), 0, 1.0, 2.6, "lions"); PR.banner((3.6, 6.6, 4.2), 0, 1.0, 2.6, "lions")
     for i in range(6): PR.candle((-0.6 + i * 0.3, 5.9, 0.0), 0.5 + 0.15 * (i % 2), light=30 if i % 2 else 0)
     PR.sack((-4.2, 1.0, 0)); PR.barrels((4.6, 0.8, 0), 1, 0)
+    import fix09; fix09.dress_chapel()
 
 
 # ================================================================== GATE v2 (courtyard)

@@ -96,7 +96,7 @@ SHOTS = [
              dict(n="gaston", e="angry", p="arms_up", look=(0, -1), at=(-0.05, 1.1, 2.3), anim="climb")],
       sfx=["scrape", "grunt", "scrape"], note="Cutaway: Bogis, Tibo and Gaston crawl up the chute."),
  dict(id="s25", at="popped out", set="chapel2", move="in", amt=0.08,
-      cam=dict(loc=(0.6, -4.6, 1.7), target=(-0.9, 2.0, 1.0), lens=24),
+      cam=dict(loc=(-1.0, -3.6, 1.6), target=(-1.2, 1.8, 0.95), lens=26),
       chars=[dict(n="bogis", e="smug", p="stand", look=(0.6, 0), at=(-1.6, 0.6, -0.62), anim="pop", clip="floor_hole")],
       sfx=["pop", "choir"], note="Bogis pops out of the latrine hole into the chapel, smug."),
  dict(id="s26", at="and threw open", set="gate2", opt=dict(light="dawn", open_=True), move="in", amt=0.10,
@@ -111,7 +111,7 @@ SHOTS = [
       fx=[dict(t="shake", at=0.2)], sfx=["panic", "scream"], note="Roger and the defenders panic."),
  dict(id="s28", at="and soon the whole", set="world2", opt=dict(light="golden", flags="french", camp=True), move="out", amt=0.12,
       cam=dict(loc=(-82, -72, None), target=(0, 4, 24), lens=28, dz=1.8, dof="philip", fstop=4),
-      chars=[dict(n="philip", e="smug", p="hips", look=(0.7, -0.6), at=(-76.0, -66.4, None), swaps=[("surrendered", "laughing")])],
+      chars=[dict(n="philip", e="smug", p="hips", look=(0.7, -0.6), at=(-76.5, -67.96, None), swaps=[("surrendered", "laughing")])], extra="flag",
       sfx=["fanfare"], note="French flag over the keep. Philip smug."),
  dict(id="s29", at="You see", set="cut2", opt=dict(light="day"), move="in", amt=0.08,
       cam=dict(loc=(-3.6, -16.5, 4.8), target=(-2.6, 1, 4.6), lens=24),
@@ -340,6 +340,6 @@ if __name__ == "__main__":
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sh = [s for s in SHOTS if s["id"] == sid][0]; build(sh)
         from scene_kit import render
-        ex = 0.6 if sh.get("opt", {}).get("light") == "night" else (0.5 if sh["set"] in ("toilet", "chapel") else (0.2 if sh["set"] == "gate" else -0.3))
+        ex = 0.6 if sh.get("opt", {}).get("light") == "night" else (0.5 if sh["set"] in ("toilet", "chapel", "toilet2", "chapel2") else (0.2 if sh["set"] == "gate" else -0.3))
         render(out, W, H, spp, exposure=ex)
         print("WROTE", out)

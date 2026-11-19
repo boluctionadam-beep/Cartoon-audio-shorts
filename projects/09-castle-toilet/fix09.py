@@ -214,3 +214,71 @@ def dress_ram(sh):
     PR.sack((-2.2, 0.4, 0.0), 20, 0.9); PR.crate_stack((2.9, 2.3, 0), 30)
     for (u, v, k) in ((1.6, -0.8, "rocks"), (1.8, 0.95, "rocks"), (2.4, -1.05, "sack")):   # foreground, cropped and blurred
         x, y = side(u, v); PR.dress((x - 0.05, x + 0.05, y - 0.05, y + 0.05), 1, [k], seed=int(u * 10))
+
+
+def _swap(prefix, m):
+    for o in bpy.data.objects:
+        if o.type == "MESH":
+            for i, mm in enumerate(o.data.materials):
+                if mm and mm.name.startswith(prefix): o.data.materials[i] = m
+
+
+def dress_privy():
+    """toilet room (s23, s35): real stone, a PRIVY plaque, moss basket, candles, jug, rag on a hook, rushes on the floor."""
+    _swap("stone_r", S2.mat("rough")); _swap("floor", S2.mat("floor")); _swap("seatw", S2.mat("planks"))
+    for o in list(bpy.data.objects):                                                     # the fake light-shaft plane read as a glass sheet
+        if o.type == "MESH" and o.data.materials and o.data.materials[0] and o.data.materials[0].name.startswith("beam"): bpy.data.objects.remove(o)
+    img = text_image(os.path.join(TEX, "sign_privy.png"), "PRIVY", font_size=230)
+    sign(img, (-0.62, 2.78, 2.1), 0.8, 0.4, 0.0, post=False)
+    W = PR.M("wood")
+    cyl((0.98, 1.35, 1.33), 0.2, 0.24, W, 16, r2=0.24)                                   # basket of moss (medieval paper)
+    sphere((0.98, 1.35, 1.45), 0.19, S2.mat("moss"), (1, 1, 0.45), sub=2)
+    PR.candle((-1.0, 2.5, 1.21), 0.2, light=45); PR.candle((-0.82, 2.6, 1.21), 0.12)
+    cyl((-0.95, 1.3, 1.36), 0.11, 0.3, flat("jug", (0.55, 0.30, 0.16), 0.5), 16, r2=0.07)
+    box((0.95, 2.76, 2.25), (0.05, 0.06, 0.06), PR.M("iron"))
+    plane((0.95, 2.74, 1.95), (0.28, 0.55), PR.M("burlap"), rot=(math.radians(90), 0, math.radians(4)))
+    rg = random.Random(23)
+    for i in range(6):
+        x, y = rg.uniform(-1.6, 1.6), rg.uniform(-1.0, 0.9)
+        sphere((x, y, 0.0), rg.uniform(0.18, 0.32), PR.M("hay"), (1.5, 1.0, 0.18), sub=2)
+    box((0.0, 0.62, 0.16), (0.62, 0.34, 0.32), S2.mat("planks"), 0.02)                 # foot stool
+    point_light((0.0, 0.2, 2.4), 40, (1.0, 0.7, 0.45), 0.4)
+
+
+def dress_chapel():
+    """chapel (s25): stone tiles + sandstone walls, a pew, candelabrum, lectern with an open book, broken flags round the hole."""
+    _swap("floor_ch", S2.mat("floor")); _swap("stone_ch", S2.mat("wall"))
+    W = PR.M("wood")
+    for y in (2.0, 3.2):                                                                  # pews behind-right of the hole
+        box((0.3, y, 0.45), (2.2, 0.45, 0.08), W); box((0.3, y + 0.22, 0.85), (2.2, 0.06, 0.6), W)
+        for sx in (-1.05, 1.05): box((0.3 + sx, y + 0.05, 0.45), (0.08, 0.55, 0.9), W)
+    cyl((-0.25, 2.6, 0.7), 0.035, 1.4, PR.M("iron"), 8); cyl((-0.25, 2.6, 0.04), 0.22, 0.08, PR.M("iron"), 16, r2=0.1)
+    box((-0.25, 2.6, 1.42), (0.6, 0.06, 0.04), PR.M("gold"))
+    for dx in (-0.28, 0.0, 0.28): PR.candle((-0.25 + dx, 2.6, 1.44), 0.2, light=25 if dx == 0 else 0)
+    cyl((0.45, 3.6, 0.55), 0.05, 1.1, W, 8); lt = box((0.45, 3.6, 1.12), (0.6, 0.45, 0.04), W, rot=(math.radians(-25), 0, 0))
+    for dx in (-0.13, 0.13):
+        plane((0.45 + dx, 3.58, 1.16), (0.24, 0.32), flat("page", (0.92, 0.88, 0.76), 0.8), rot=(math.radians(-25), math.radians(6 if dx < 0 else -6), 0))
+    rg = random.Random(25); R = S2.mat("floor")
+    for i in range(9):                                                                    # cracked flagstones round the latrine hole
+        a = rg.uniform(0, 2 * math.pi); d = rg.uniform(0.6, 0.95)
+        b = box((-1.6 + math.cos(a) * d, 0.6 + math.sin(a) * d, 0.02), (rg.uniform(0.15, 0.3), rg.uniform(0.12, 0.25), 0.06), R, 0.01)
+        b.rotation_euler = (rg.uniform(-0.2, 0.2), rg.uniform(-0.2, 0.2), rg.uniform(0, 3))
+
+
+def dress_flag(sh):
+    """s28 'the whole castle surrendered': lift the French flag above the keep roof, French colours on every pole, no blob trees in view."""
+    from sets09 import world_h
+    for o in bpy.data.objects:
+        if o.type == "MESH" and o.data.materials and o.data.materials[0] and o.data.materials[0].name.startswith(("flag", "lilyg")) \
+                and not o.data.materials[0].name.startswith("flagc") and o.location.z > 30:
+            o.location.z += 8.5
+    cyl((0.2, 4.0, 40.0), 0.15, 9.0, PR.M("darkwood"), 8)
+    for m in bpy.data.materials:
+        if m.name.startswith("flagc") and m.node_tree and "Principled BSDF" in m.node_tree.nodes:
+            m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.12, 0.22, 0.62, 1)
+    loc = sh["cam"]["loc"]; tg = sh["cam"]["target"]; a0 = math.atan2(tg[1] - loc[1], tg[0] - loc[0])
+    for ob in list(bpy.data.objects):
+        if ob.get("tree"):
+            dx, dy = ob.location.x - loc[0], ob.location.y - loc[1]
+            if math.hypot(dx, dy) < 90 and abs((math.atan2(dy, dx) - a0 + math.pi) % (2 * math.pi) - math.pi) < math.radians(30):
+                bpy.data.objects.remove(ob)
