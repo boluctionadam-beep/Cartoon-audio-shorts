@@ -171,3 +171,46 @@ def dress_breach(sh):
         x, y = side(rg.uniform(4, 8), rg.uniform(-2, 2)); z = world_h(x, y)
         img = PR.heraldry("lilies", (30, 50, 150), (240, 200, 60), 384, 448, "shield")     # shield lying flat in the grass
         plane((x, y, z + 0.1), (0.6, 0.7), PR.K.image_mat("shield_lilies", img, emit=0.05), rot=(0.0, 0.0, rg.uniform(0, 6.2)))
+
+
+def _ram(loc, yaw):
+    """wheeled battering ram: log on ropes under an A-frame, iron head pointing along local +x"""
+    from scene_kit import wood
+    LOG, W, IR, RP = wood("ram", (0.32, 0.20, 0.10), (0.5, 0.34, 0.18)), PR.M("wood"), PR.M("iron"), PR.M("rope")
+    parts = []
+    lg = cyl((0, 0, 1.0), 0.28, 5.0, LOG, 20); lg.rotation_euler.y = math.radians(90); parts.append(lg)
+    hd = cyl((2.75, 0, 1.0), 0.36, 0.55, IR, 20, r2=0.14); hd.rotation_euler.y = math.radians(90); parts.append(hd)
+    for x in (-1.8, 0.0, 1.8, 2.35):
+        b = cyl((x, 0, 1.0), 0.305, 0.09, IR, 20); b.rotation_euler.y = math.radians(90); parts.append(b)
+    for sx in (-1.4, 1.4):
+        for sy in (-0.75, 0.75):
+            parts.append(box((sx, sy, 1.25), (0.14, 0.14, 1.9), W))
+        parts.append(box((sx, 0, 2.2), (0.14, 1.64, 0.14), W))
+    for sy in (-0.75, 0.75):
+        parts.append(box((0, sy, 2.2), (3.1, 0.14, 0.14), W)); parts.append(box((0, sy, 0.42), (3.4, 0.16, 0.16), W))
+    for sx in (-0.9, 0.9): parts.append(cyl((sx, 0, 1.75), 0.03, 0.9, RP, 6)); parts.append(cyl((sx, 0, 2.2), 0.06, 0.16, RP, 10))
+    for sx in (-1.2, 1.2):
+        for sy in (-0.9, 0.9):
+            w = cyl((sx, sy, 0.42), 0.42, 0.1, W, 20); w.rotation_euler.x = math.radians(90); parts.append(w)
+            h = cyl((sx, sy * 1.06, 0.42), 0.09, 0.06, IR, 12); h.rotation_euler.x = math.radians(90); parts.append(h)
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in parts: o.select_set(True)
+    bpy.context.view_layer.objects.active = parts[0]; bpy.ops.object.join(); o = bpy.context.object
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)     # bake the log's own rotation, origin -> (0,0,0)
+    o.location = loc; o.rotation_euler = (0, 0, math.radians(yaw)); return o
+
+
+def dress_ram(sh):
+    """s17 'The second wouldn't budge': a proper battering ram against the wall, banners and ladder on the wall, battle litter."""
+    _ram((-0.25, 0.6, 0.02), 70)
+    sphere((0.85, 3.25, 1.0), 1.0, _dust_mat(0.6, (0.80, 0.72, 0.60), 0.8), (0.9, 0.6, 0.8), sub=3)      # puff of mortar dust at the impact
+    for x in (-1.3, 2.4): PR.banner((x, WALL_Y - 0.1, 5.6), 0, 1.3, 3.4, "lions")
+    S2.place("wooden_ladder", (-2.6, 2.6, 0), 1.0, math.radians(-8))
+    side = _cam_frame(sh); rg = random.Random(17)
+    for i in range(7):                                                            # stone chips knocked off the talus
+        x, y = rg.uniform(-0.5, 1.8), rg.uniform(2.0, 2.8)
+        b = box((x, y, 0.1), (rg.uniform(0.12, 0.3),) * 3, S2.mat("rough"), 0.02); b.rotation_euler = (rg.uniform(0, 3), rg.uniform(0, 3), rg.uniform(0, 3))
+    PR.rope_coil((1.0, 1.2, 0.05)); S2.place("wooden_bucket_01", (2.3, 1.7, 0.02), 1.0, 0.4)
+    PR.sack((-2.2, 0.4, 0.0), 20, 0.9); PR.crate_stack((2.9, 2.3, 0), 30)
+    for (u, v, k) in ((1.6, -0.8, "rocks"), (1.8, 0.95, "rocks"), (2.4, -1.05, "sack")):   # foreground, cropped and blurred
+        x, y = side(u, v); PR.dress((x - 0.05, x + 0.05, y - 0.05, y + 0.05), 1, [k], seed=int(u * 10))
