@@ -156,6 +156,7 @@ def set_cutaway2(light="night", labels=False):
     from sets09 import set_cutaway
     set_cutaway(light, labels)
     # grime streaks + moss in the chute, cobwebs, bucket and torch upstairs, reeds in the moat, a rat
+    box((0, 4.0, -1.0), (12.0, 8.0, 2.0), mat("dirt"))                  # solid ground under the wall (the outlet showed the void)
     plane((0, 1.72, 5.5), (1.25, 9.0), mat("grime"), rot=(math.radians(90), 0, 0))
     for zz in (2.0, 4.5, 7.0):
         sphere((0.55, 1.2, zz), 0.18, mat("moss"), (0.4, 1, 1.4), sub=2)
@@ -188,6 +189,9 @@ def set_cutaway2(light="night", labels=False):
         place("wooden_ladder", (1.6, -0.4, 0), 1.0, math.radians(15)); PR.hay_bale((2.6, -2.2, 0), 15)
         PR.torch((-4.6, -0.2, 3.0), 0, True, 120)
         for i in range(6): sphere((-7.5 + i * 0.7, -1.4 + (i % 2) * 0.5, -0.4), 0.18, flat("reed", (0.25, 0.42, 0.12), 0.8), (0.3, 0.3, 2.2), sub=1)
+        import fix09                                                        # day cutaway: real masonry + ground textures
+        fix09._swap("cutface", mat("rough")); fix09._swap("stone", mat("wall")); fix09._swap("grass_c", mat("ground"))
+        fix09._swap("earth", mat("dirt"))
 
 
 # ================================================================== TOILET ROOM v2
