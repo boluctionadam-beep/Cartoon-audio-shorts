@@ -372,3 +372,67 @@ def set_gate(light="dawn", open_=True):
     point("gate", (0, 6.2, 3.5))
     sky(light)
     area_light((0, 14, 4), (0, 0, 1), 1500, 6, (1.0, 0.8, 0.6)); area_light((2, -10, 6), (0, 2, 1), 1200, 8, (1.0, 0.92, 0.85))
+
+
+# ================================================================== WALL v2 (real textures + assets + atmosphere)
+HDRI = {"golden": "qwantani_late_afternoon_puresky", "day": "kloofendal_48d_partly_cloudy_puresky",
+        "dusk": "qwantani_dusk_2_puresky", "dawn": "qwantani_sunrise_puresky", "night": "qwantani_night_puresky"}
+
+
+def atmosphere(light="golden", fog_density=0.004, sun=False, fog_size=(160, 160, 70), fog_center=(0, 0, 25)):
+    sky(light)                                         # vivid stylised sky + directional sun (crisp shadows)
+    if fog_density > 0: fog(fog_density, (0.95, 0.88, 0.78) if light in ("golden", "dusk", "dawn") else (0.85, 0.9, 1.0), 0.45, fog_size, fog_center)
+    if sun:
+        P = {"golden": ((0.9, 0.25, -0.36), (1.0, 0.78, 0.52), 4.5), "day": ((0.6, 0.5, -0.62), (1, 0.96, 0.9), 4.0),
+             "dusk": ((0.95, 0.1, -0.25), (1.0, 0.55, 0.35), 3.5), "dawn": ((-0.6, 0.7, -0.3), (1.0, 0.72, 0.55), 3.8),
+             "night": ((0.5, 0.6, -0.62), (0.55, 0.68, 1.0), 1.2)}[light]
+        bpy.ops.object.light_add(type="SUN"); s = bpy.context.object
+        s.rotation_euler = Vector(P[0]).normalized().to_track_quat("-Z", "Y").to_euler(); s.data.color = P[1]; s.data.energy = P[2]; s.data.angle = math.radians(2)
+
+
+def set_wall2(light="golden", grass=True, rubble=False, breach=False, stain=True):
+    from mathutils import Vector as V
+    WALLM = pbr("wall_pbr", "sandstone_blocks_05", scale=0.40, tint=(1.0, 0.98, 0.94), bump=1.3)
+    ROUGH = pbr("rough_pbr", "medieval_blocks_05", scale=0.55, tint=(0.95, 0.93, 0.9), bump=1.5)
+    w = box((0, WALL_Y + 1.5, 6), (44, 3, 16), WALLM, 0.03, "wall")
+    merlons(-20, 20, WALL_Y + 0.4, 14, WALLM)
+    bpy.ops.mesh.primitive_cube_add(location=(0, WALL_Y - 0.2, 0.9)); tb = bpy.context.object; tb.scale = (22, 1.0, 1.4)
+    bpy.ops.object.transform_apply(scale=True)
+    for v in tb.data.vertices:
+        if v.co.z > 1.5 and v.co.y < WALL_Y: v.co.y += 1.4
+    tb.data.materials.append(ROUGH)
+    box((GX, GY, GZ), (2.2, 1.8, 2.6), ROUGH, 0.05, "garderobe")
+    for dx in (-0.85, 0.85):
+        box((GX + dx, GY + 0.25, GZ - 1.5), (0.5, 1.3, 0.4), ROUGH, 0.03); box((GX + dx, GY + 0.55, GZ - 1.85), (0.5, 0.7, 0.32), ROUGH, 0.03)
+    roof = pbr("roof_pbr", "roof_planks", scale=1.0, bump=1.0)
+    r = box((GX, GY - 0.1, GZ + 1.45), (2.5, 2.1, 0.18), roof); r.rotation_euler.x = math.radians(-20)
+    box((GX + 0.5, GY - 0.91, GZ + 0.3), (0.16, 0.05, 0.6), flat("dark", (0.02, 0.015, 0.01), 1.0))
+    box((GX - 0.2, GY - 0.25, GZ - 1.31), (0.7, 0.6, 0.04), flat("hole", (0.01, 0.008, 0.005), 1.0), name="hole")
+    point("hole", (GX - 0.2, GY - 0.25, GZ - 1.35)); point("garderobe", (GX, GY, GZ))
+    if stain:
+        plane((GX - 0.2, WALL_Y - 0.02, (GZ - 1.3) / 2 + 0.6), (0.9, (GZ - 1.3) - 0.8), _stain(), rot=(math.radians(90), 0, 0))
+    for bx in (-3.4, 7.0):                                                # two banners
+        bpy.ops.mesh.primitive_grid_add(x_subdivisions=20, y_subdivisions=40, size=1, location=(bx, WALL_Y - 0.12, 10.6)); bn = bpy.context.object
+        bn.scale = (1.5, 4.6, 1); bn.rotation_euler.x = math.radians(90); bn.data.materials.append(flat("banner", (0.62, 0.05, 0.05), 0.7))
+        wv = bn.modifiers.new("w", "WAVE"); wv.height = 0.08; wv.width = 0.9; wv.use_normal = True
+    if breach:
+        cutter = box((-6, WALL_Y + 1.5, 4), (6, 5, 9), None); cut(w, cutter)
+    G = pbr("ground_pbr", "aerial_grass_rock", scale=0.22, tint=(0.95, 1.05, 0.85), bump=0.8)
+    g = grid_ground(90, 70, G, lambda x, y: 0.08 * math.sin(x * 0.7) * math.cos(y * 0.5))
+    near = lambda c: -8.5 < c.y < WALL_Y - 0.6 and abs(c.x) < 14
+    if grass:
+        if os.environ.get("BLADES", "0") == "1": grass_particles(g, blade_mat(), 70000, near, length=0.34)
+        grass_field(g, "grass_medium_01", int(os.environ.get("CLUMPS", "90000")), near, size=float(os.environ.get("GSIZE", "2.6")))
+    clear = lambda x, y: (abs(x + 0.25) < 1.6 and -7 < y < -1.5) or (abs(x - 0.3) < 1.2 and y < -5)
+    scatter("shrub_02", (-12, 12, 1.0, 2.3), 9, scale=(0.7, 1.2), seed=3, avoid=lambda x, y: abs(x - GX) < 1.4 or abs(x + 0.25) < 2.0)
+    scatter("rock_moss_set_01", (-11, 11, -6, WALL_Y - 1.0), 6, scale=(0.25, 0.5), seed=5, avoid=clear)
+    for i, x in enumerate((-6.2, -5.4)):
+        place("wooden_barrels_01", (x, 1.9, 0), 1.0, i * 1.3, variant=i)
+    if rubble or breach:
+        rg = random.Random(3)
+        for i in range(40):
+            x = rg.uniform(-10, -1.5) if breach else rg.uniform(-8, 8)
+            sphere((x, rg.uniform(1.0, WALL_Y + 1), rg.uniform(0, 1.0)), rg.uniform(0.2, 0.6), ROUGH, (1, rg.uniform(.7, 1.3), rg.uniform(.5, .9)), sub=1, smooth=False)
+    atmosphere(light, float(os.environ.get("FOG", "0.006")), fog_size=(120, 90, 40), fog_center=(0, 0, 18))
+    if light == "night":
+        point_light((-3, -2, 3), 160, (1.0, 0.55, 0.25), 0.3)

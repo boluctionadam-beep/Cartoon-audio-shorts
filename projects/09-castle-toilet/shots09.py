@@ -77,7 +77,7 @@ SHOTS = [
       cam=dict(loc=(0.6, -5.2, 1.55), target=(-0.25, -2.4, 1.5), lens=30, dof="bogis", fstop=2.0),
       chars=[dict(n="bogis", e="neutral", p="hold_spear", look=(0, 0), at=(-0.25, -2.4, 0), swaps=[("story goes", "curious")])],
       sfx=["birds"], note="Meet Bogis (neutral → curious)."),
- dict(id="s19", at="a soldier named", set="wall", opt=dict(light="golden"), move="in", amt=0.08,
+ dict(id="s19", at="a soldier named", set="wall2", opt=dict(light="golden"), move="in", amt=0.08,
       cam=dict(loc=(0.05, -6.5, 0.8), rot=(106, 0, -3), lens=15, dof="bogis", fstop=1.0),
       chars=[dict(n="bogis", e="curious", p="point_up", look=(0.5, -0.6), at=WALL_HERO)], sfx=["sting"], note="Bogis looks up and points (approved frame)."),
  dict(id="s20", at="spotted a little", set="wall", opt=dict(light="golden"), move="in", amt=0.14,
@@ -265,6 +265,7 @@ def build(sh):
     reset()
     o = dict(sh.get("opt", {}))
     if sh["set"] == "wall": S.set_wall(**o)
+    elif sh["set"] == "wall2": S.set_wall2(**o)
     elif sh["set"] == "world": S.set_world(**o)
     elif sh["set"] == "battlements": S.set_battlements(**o)
     elif sh["set"] == "cutaway": S.set_cutaway(**o)

@@ -201,10 +201,12 @@ class Canvas:
             e = pts[-1]; self.limb(e, (e[0] + hook * 0.4, e[1] + hook * 0.2), (e[0] + hook * 0.5, e[1] + hook), w * 0.4, w * 0.2)
 
     def eye_dot(self, x, y, s, look=(0, 0)):
+        if getattr(self, "blink", False): return self.eye_arc(x, y, s * 0.9, up=False)
         self.dot(x + look[0] * s * 0.3, y + look[1] * s * 0.3, s * 0.72, s)
 
     def eye_lid(self, x, y, s, lid=0.45, tilt=0.0, look=(0, 0), skin=WHITE):
         """half-moon eye: black oval cut by a straight eyelid line (smug, suspicious, tired)"""
+        if getattr(self, "blink", False): return self.eye_arc(x, y, s * 0.9, up=False)
         self.eye_dot(x, y, s, look)
         ly = y - s + 2 * s * lid; t = math.tan(math.radians(tilt))
         L = s * 1.25
@@ -214,6 +216,7 @@ class Canvas:
 
     def eye_white(self, x, y, s, look=(0, 0), pupil=0.38):
         """wide white eye with a black pupil (shock, surprise, fear)"""
+        if getattr(self, "blink", False): return self.eye_arc(x, y, s, up=False)
         self.dot(x, y, s * 0.95 + 6, s * 1.15 + 6, INK); self.dot(x, y, s * 0.95, s * 1.15, WHITE)
         self.dot(x + look[0] * s * 0.45, y + look[1] * s * 0.55, s * pupil, s * pupil * 1.15)
 

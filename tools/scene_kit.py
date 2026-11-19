@@ -244,8 +244,11 @@ def grass_particles(ground, blade_mat, count=40000, region=None, length=0.38):
 def blade_mat():
     m = bpy.data.materials.new("blade"); N, L = _nodes(m); b = N["Principled BSDF"]
     tc = N.new("ShaderNodeTexCoord"); sep = N.new("ShaderNodeSeparateXYZ"); L.new(tc.outputs["Generated"], sep.inputs[0])
-    cr = N.new("ShaderNodeValToRGB"); cr.color_ramp.elements[0].color = (0.06, 0.22, 0.04, 1); cr.color_ramp.elements[1].color = (0.50, 0.70, 0.18, 1)
-    L.new(sep.outputs["Z"], cr.inputs["Fac"]); L.new(cr.outputs["Color"], b.inputs["Base Color"]); b.inputs["Roughness"].default_value = 0.6
+    cr = N.new("ShaderNodeValToRGB"); cr.color_ramp.elements[0].color = (0.05, 0.18, 0.03, 1); cr.color_ramp.elements[1].color = (0.46, 0.66, 0.16, 1)
+    L.new(sep.outputs["Z"], cr.inputs["Fac"])
+    oi = N.new("ShaderNodeObjectInfo"); hv = N.new("ShaderNodeMix"); hv.data_type = "RGBA"; hv.blend_type = "MULTIPLY"   # per-blade tint variation
+    L.new(oi.outputs["Random"], hv.inputs["Factor"]); L.new(cr.outputs["Color"], hv.inputs[6]); hv.inputs[7].default_value = (0.75, 0.85, 0.55, 1)
+    L.new(hv.outputs[2], b.inputs["Base Color"]); b.inputs["Roughness"].default_value = 0.6
     return m
 
 
@@ -376,7 +379,7 @@ def sky(preset="golden"):
     cr.color_ramp.elements[0].position = 0.0; cr.color_ramp.elements[1].position = 0.16; cr.color_ramp.elements[1].color = (*zen, 1)
     WL.new(sz.outputs["Z"], cr.inputs["Fac"])
     lp_ = WN.new("ShaderNodeLightPath"); bg2 = WN.new("ShaderNodeBackground"); WL.new(cr.outputs["Color"], bg2.inputs["Color"]); bg2.inputs["Strength"].default_value = 1.6
-    bg.inputs["Strength"].default_value = p["sky"] * 2.2; WL.new(cr.outputs["Color"], bg.inputs["Color"])
+    bg.inputs["Strength"].default_value = p["sky"] * float(__import__("os").environ.get("AMB", "5.0")); WL.new(cr.outputs["Color"], bg.inputs["Color"])
     mx_ = WN.new("ShaderNodeMath"); mx_.operation = "MAXIMUM"; WL.new(lp_.outputs["Is Camera Ray"], mx_.inputs[0]); WL.new(lp_.outputs["Is Glossy Ray"], mx_.inputs[1])
     mix = WN.new("ShaderNodeMixShader"); WL.new(mx_.outputs[0], mix.inputs[0]); WL.new(bg.outputs[0], mix.inputs[1]); WL.new(bg2.outputs[0], mix.inputs[2])
     WL.new(mix.outputs[0], WN["World Output"].inputs["Surface"])
@@ -409,7 +412,7 @@ def render(out_png, W=1440, H=2560, spp=40, exposure=-0.3, look="AgX - Punchy"):
     sc = bpy.context.scene
     face_cards(sc.camera)
     sc.render.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = spp
-    sc.cycles.use_denoising = True; sc.cycles.max_bounces = 5; sc.cycles.transparent_max_bounces = 16
+    sc.cycles.use_denoising = True; sc.cycles.max_bounces = 5; sc.cycles.transparent_max_bounces = 64
     sc.cycles.use_adaptive_sampling = True; sc.cycles.adaptive_threshold = 0.02
     sc.render.resolution_x, sc.render.resolution_y = int(W * OVERSCAN), int(H * OVERSCAN); sc.render.resolution_percentage = 100
     sc.view_settings.view_transform = "AgX"; sc.view_settings.look = look; sc.view_settings.exposure = exposure
@@ -437,3 +440,161 @@ def export(path, sc):
     for k, v in POINTS.items():
         data["points"][k] = px(v)
     json.dump(data, open(path, "w"), indent=1)
+
+
+# ------------------------------------------------------------------ real assets (Poly Haven, CC0)
+def pbr(name, aid, scale=1.0, res="2k", tint=None, bump=1.0, rough_mul=1.0, box_blend=0.25, moss=None):
+    """Photo-scanned PBR material with box projection (no UVs needed). scale = texture repeats per metre.
+    tint multiplies the colour (for warmer limestone etc.), moss = (aid, amount) mixes a second texture by noise."""
+    import polyhaven as ph
+    t = ph.tex(aid, res)
+    m = bpy.data.materials.new(name); N, L = _nodes(m); b = N["Principled BSDF"]
+    tc = N.new("ShaderNodeTexCoord"); mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (scale,) * 3
+    L.new(tc.outputs["Object"], mp.inputs["Vector"])
+    def img(path, color=True):
+        n = N.new("ShaderNodeTexImage"); n.image = bpy.data.images.load(path); n.projection = "BOX"; n.projection_blend = box_blend
+        if not color: n.image.colorspace_settings.name = "Non-Color"
+        L.new(mp.outputs["Vector"], n.inputs["Vector"]); return n
+    col = img(t["diff"]).outputs["Color"]
+    if moss:
+        t2 = ph.tex(moss[0], res); c2 = img(t2["diff"]).outputs["Color"]
+        nz = N.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 0.35; nz.inputs["Detail"].default_value = 6
+        L.new(tc.outputs["Object"], nz.inputs["Vector"])
+        mr = N.new("ShaderNodeMapRange"); mr.inputs["From Min"].default_value = 0.55 - moss[1] * 0.2; mr.inputs["From Max"].default_value = 0.62 - moss[1] * 0.2
+        L.new(nz.outputs["Fac"], mr.inputs["Value"])
+        mx = N.new("ShaderNodeMix"); mx.data_type = "RGBA"; L.new(mr.outputs["Result"], mx.inputs["Factor"]); L.new(col, mx.inputs[6]); L.new(c2, mx.inputs[7]); col = mx.outputs[2]
+    if tint:
+        tn = N.new("ShaderNodeMix"); tn.data_type = "RGBA"; tn.blend_type = "MULTIPLY"; tn.inputs["Factor"].default_value = 1.0
+        tn.inputs[7].default_value = (*tint, 1); L.new(col, tn.inputs[6]); col = tn.outputs[2]
+    L.new(col, b.inputs["Base Color"])
+    if "rough" in t:
+        r = img(t["rough"], False); mm = N.new("ShaderNodeMath"); mm.operation = "MULTIPLY"; mm.inputs[1].default_value = rough_mul
+        L.new(r.outputs["Color"], mm.inputs[0]); L.new(mm.outputs[0], b.inputs["Roughness"])
+    if "nor" in t:
+        nm = N.new("ShaderNodeNormalMap"); nm.inputs["Strength"].default_value = bump
+        L.new(img(t["nor"], False).outputs["Color"], nm.inputs["Color"])
+        if "disp" in t:
+            bp = N.new("ShaderNodeBump"); bp.inputs["Strength"].default_value = 0.35 * bump; bp.inputs["Distance"].default_value = 0.05
+            L.new(img(t["disp"], False).outputs["Color"], bp.inputs["Height"]); L.new(nm.outputs["Normal"], bp.inputs["Normal"]); L.new(bp.outputs["Normal"], b.inputs["Normal"])
+        else:
+            L.new(nm.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+def hdri_world(aid, strength=1.0, rot=0.0, res="2k", sat=1.15, cam_strength=None):
+    """HDRI sky for lighting and background. cam_strength lets the visible sky be brighter/darker than the light it gives."""
+    import polyhaven as ph
+    p = ph.hdri(aid, res); sc = bpy.context.scene
+    w = bpy.data.worlds.new("hdri"); sc.world = w; w.use_nodes = True; N, L = w.node_tree.nodes, w.node_tree.links
+    tc = N.new("ShaderNodeTexCoord"); mp = N.new("ShaderNodeMapping"); mp.inputs["Rotation"].default_value = (0, 0, math.radians(rot))
+    env = N.new("ShaderNodeTexEnvironment"); env.image = bpy.data.images.load(p)
+    L.new(tc.outputs["Generated"], mp.inputs["Vector"]); L.new(mp.outputs["Vector"], env.inputs["Vector"])
+    hs = N.new("ShaderNodeHueSaturation"); hs.inputs["Saturation"].default_value = sat; L.new(env.outputs["Color"], hs.inputs["Color"])
+    bg = N["Background"]; bg.inputs["Strength"].default_value = strength; L.new(hs.outputs["Color"], bg.inputs["Color"])
+    if cam_strength is not None:
+        bg2 = N.new("ShaderNodeBackground"); bg2.inputs["Strength"].default_value = cam_strength; L.new(hs.outputs["Color"], bg2.inputs["Color"])
+        lp = N.new("ShaderNodeLightPath"); mx = N.new("ShaderNodeMixShader")
+        L.new(lp.outputs["Is Camera Ray"], mx.inputs[0]); L.new(bg.outputs[0], mx.inputs[1]); L.new(bg2.outputs[0], mx.inputs[2])
+        L.new(mx.outputs[0], N["World Output"].inputs["Surface"])
+    return w
+
+
+def fog(density=0.004, color=(0.85, 0.88, 0.95), anisotropy=0.35, size=(160, 160, 70), center=(0, 0, 25)):
+    """thin fog in a bounded volume box around the scene: aerial perspective + light shafts.
+    (A world volume would absorb the sun and the HDRI, which sit at infinity.)"""
+    m = bpy.data.materials.new("fog"); m.use_nodes = True; N, L = m.node_tree.nodes, m.node_tree.links
+    N.remove(N["Principled BSDF"])
+    v = N.new("ShaderNodeVolumePrincipled"); v.inputs["Density"].default_value = density; v.inputs["Color"].default_value = (*color, 1)
+    v.inputs["Anisotropy"].default_value = anisotropy
+    L.new(v.outputs[0], N["Material Output"].inputs["Volume"])
+    bpy.ops.mesh.primitive_cube_add(location=center); o = bpy.context.object; o.name = "fog_domain"
+    o.scale = (size[0] / 2, size[1] / 2, size[2] / 2); o.data.materials.append(m)
+    o.visible_shadow = False
+    return o
+
+
+_MODEL_CACHE = {}
+
+
+def model(aid, res="1k"):
+    """import a Poly Haven glTF once; returns a list of hidden template objects (one per variant node)"""
+    import polyhaven as ph
+    if aid in _MODEL_CACHE: return _MODEL_CACHE[aid]
+    path = ph.model(aid, res)
+    before = set(o.name for o in bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=path)
+    new = [o.name for o in bpy.data.objects if o.name not in before]
+    meshes = [bpy.data.objects[n] for n in new if bpy.data.objects[n].type == "MESH"]
+    for m in meshes:
+        mw = m.matrix_world.copy(); m.parent = None; m.matrix_world = mw
+    for n in new:
+        o = bpy.data.objects.get(n)
+        if o is not None and o.type != "MESH": bpy.data.objects.remove(o)
+    out = []
+    for m in meshes:                                   # recentre each variant on its footprint, base at z=0
+        bpy.ops.object.select_all(action="DESELECT"); m.select_set(True); bpy.context.view_layer.objects.active = m
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        vs = [v.co for v in m.data.vertices]
+        cx = sum(v.x for v in vs) / len(vs); cy = sum(v.y for v in vs) / len(vs); z0 = min(v.z for v in vs)
+        for v in m.data.vertices: v.co.x -= cx; v.co.y -= cy; v.co.z -= z0
+        m.location = (0, 0, 0); m.name = f"tmpl_{aid}_{len(out)}"; out.append(m)
+    lib = bpy.data.collections.new("lib_" + aid)                       # library collection, NOT linked to the scene
+    for m in out:
+        for c in list(m.users_collection): c.objects.unlink(m)
+        lib.objects.link(m)
+    _MODEL_CACHE[aid] = out
+    return out
+
+
+def place(aid, loc, scale=1.0, rot_z=0.0, res="1k", variant=None, seed=None):
+    """linked copy (shares mesh data = cheap) of one variant of a model"""
+    vs = model(aid, res); r = random.Random(seed if seed is not None else (loc[0] * 7.3 + loc[1] * 3.1))
+    t = vs[variant % len(vs)] if variant is not None else r.choice(vs)
+    o = t.copy(); bpy.context.collection.objects.link(o)
+    o.location = loc; o.rotation_euler = (0, 0, rot_z); o.scale = (scale,) * 3; o.hide_render = False
+    return o
+
+
+def scatter(aid, region, n, zfn=lambda x, y: 0.0, scale=(0.8, 1.3), seed=1, avoid=None, res="1k"):
+    """scatter n linked copies over region=(x0,x1,y0,y1); avoid(x,y)->True skips"""
+    r = random.Random(seed); out = []
+    for i in range(n * 3):
+        if len(out) >= n: break
+        x, y = r.uniform(region[0], region[1]), r.uniform(region[2], region[3])
+        if avoid and avoid(x, y): continue
+        out.append(place(aid, (x, y, zfn(x, y)), r.uniform(*scale), r.uniform(0, 6.283), res))
+    return out
+
+
+def brighten(objs, value=1.6, sat=1.15, hue=0.5, translucent=0.25):
+    """lift dark scanned foliage materials: HSV on the colour texture + a bit of translucency"""
+    seen = set()
+    for o in objs:
+        for m in o.data.materials:
+            if m is None or m.name in seen or not m.use_nodes: continue
+            seen.add(m.name); N, L = m.node_tree.nodes, m.node_tree.links
+            b = next((n for n in N if n.type == "BSDF_PRINCIPLED"), None)
+            if b is None: continue
+            src = b.inputs["Base Color"].links[0].from_socket if b.inputs["Base Color"].links else None
+            hs = N.new("ShaderNodeHueSaturation"); hs.inputs["Value"].default_value = value; hs.inputs["Saturation"].default_value = sat; hs.inputs["Hue"].default_value = hue
+            if src: L.new(src, hs.inputs["Color"])
+            else: hs.inputs["Color"].default_value = b.inputs["Base Color"].default_value
+            L.new(hs.outputs["Color"], b.inputs["Base Color"])
+            for ln in list(b.inputs["Metallic"].links): L.remove(ln)       # scanned foliage is never metal
+            b.inputs["Metallic"].default_value = 0.0
+            try: b.inputs["Transmission Weight"].default_value = translucent * 0.0; b.inputs["Subsurface Weight"].default_value = translucent
+            except Exception: pass
+
+
+def grass_field(ground, aid="grass_medium_01", count=6000, region=None, size=1.0, res="1k"):
+    """real grass clumps (all variants) instanced by a hair particle system on `ground`"""
+    vs = model(aid, res); brighten(vs, 2.6, 1.45, 0.47)
+    coll = bpy.data.collections["lib_" + aid]
+    ps = ground.modifiers.new("grass3d", "PARTICLE_SYSTEM").particle_system.settings
+    ps.type = "HAIR"; ps.count = count; ps.hair_length = 1.0; ps.render_type = "COLLECTION"; ps.instance_collection = coll; ps.use_collection_pick_random = True
+    ps.particle_size = size; ps.size_random = 0.5; ps.use_rotations = True; ps.rotation_mode = "NOR"; ps.phase_factor_random = 2.0
+    ps.use_advanced_hair = True
+    if region:
+        vg = ground.vertex_groups.new(name="g3d")
+        for v in ground.data.vertices: vg.add([v.index], 1.0 if region(v.co) else 0.0, "REPLACE")
+        ground.particle_systems[-1].vertex_group_density = "g3d"

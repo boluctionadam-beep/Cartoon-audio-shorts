@@ -8,6 +8,23 @@ import numpy as np
 from PIL import Image, ImageFilter, ImageDraw, ImageChops
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+RIG_ACTIONS = {"idle", "laugh", "cheer", "shake", "march", "walk", "run", "climb", "climb_fast", "dig", "panic", "recoil", "bounce", "pop", "pop_final"}
+_SPECS = {}
+
+
+def _specs(proj):
+    """cast specs of the project (projects/<id>/cast.py SPECS)"""
+    if proj not in _SPECS:
+        import importlib.util
+        p = os.path.join(proj, "cast.py")
+        if os.path.exists(p):
+            sp = importlib.util.spec_from_file_location("projcast_" + str(abs(hash(proj))), p); m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+            _SPECS[proj] = m.SPECS
+        else:
+            _SPECS[proj] = {}
+    return _SPECS[proj]
+
+
 TINT = {"golden": (1.0, 0.93, 0.80), "day": (1.0, 0.99, 0.96), "dusk": (1.0, 0.84, 0.72), "dawn": (1.0, 0.90, 0.82),
         "night": (0.60, 0.68, 0.95), "interior": (1.0, 0.90, 0.76)}
 
@@ -94,6 +111,10 @@ class Shot:
             name = cd["name"]; c = chars.get(name)
             imgs = {}
             base = Image.open(cd["img"]).convert("RGBA")
+            rig = None
+            if c and c.get("rig", True) and not cd["baked"] and _specs(proj).get(c["n"]):
+                from rig import Rig
+                rig = Rig(_specs(proj)[c["n"]], look=tuple(c.get("look", (0, 0))), post=lambda im, _t=tint: grade_card(im, _t), prop=c.get("prop") or _specs(proj)[c["n"]].get("prop"))
             if c:
                 imgs[c["e"]] = grade_card(base, tint)
                 for sw in sh.get("swaps", []):
@@ -104,7 +125,7 @@ class Shot:
             else:
                 imgs["x"] = grade_card(base, tint); anim = sh.get("crowd_anim") or "idle"; clip = None; first = "x"
             self.cards.append(dict(name=name, quad=quad, imgs=imgs, first=first, anim=anim, clip=clip, dist=cd["dist"],
-                                   hero=bool(c), seed=random.Random(name).random() * 10))
+                                   hero=bool(c), seed=random.Random(name).random() * 10, rig=rig, pose=c["p"] if c else None))
         self.cards.sort(key=lambda c: -c["dist"])                     # far to near
         self.swaps = [(sw["t"] - sh["t0"], sw["n"], sw["e"]) for sw in sh.get("swaps", []) if sw["t"] is not None]
         self.dur = sh["t1"] - sh["t0"]
@@ -155,9 +176,22 @@ class Shot:
         e = c["first"]
         for ts, n, ex in self.swaps:
             if n == c["name"] and t >= ts: e = ex
+        if c.get("rig") is not None:
+            act = c["anim"] if c["anim"] in RIG_ACTIONS else "idle"
+            return c["rig"].render(t, act, c["pose"], e, self.dur)
         return c["imgs"].get(e, c["imgs"][c["first"]])
 
     def anim(self, c, t):
+        if c.get("rig") is not None:
+            a = c["anim"]; dx = dy = 0.0; sx = sy = 1.0
+            if a == "climb": dy -= 0.16 * (t / self.dur)
+            elif a == "climb_fast": dy -= 2.6 * ease(t / self.dur * 1.1)
+            elif a == "pop": dy += 0.75 * (1 - out_back(t / 0.42))
+            elif a == "pop_final": dy += 0.95 * (1 - out_back((t - 0.15) / 0.5))
+            elif a == "march": dx += 0.05 * t
+            elif a == "run": sx = sy = 1 + 0.12 * t
+            elif a == "panic": dx += 0.04 * math.sin(2 * math.pi * t * 1.2 + c["seed"])
+            return sx, sy, 0.0, dx, dy
         a = c["anim"]; ph = c["seed"]; sx = sy = 1.0; rot = 0.0; dx = dy = 0.0
         sy *= 1 + 0.012 * math.sin(2 * math.pi * t / 2.2 + ph); rot += 0.8 * math.sin(2 * math.pi * t / 3.1 + ph)
         if a == "shake": dx += 0.006 * math.sin(t * 120 + ph); rot += 1.2 * math.sin(t * 40)
