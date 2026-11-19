@@ -132,7 +132,11 @@ class Shot:
         self.S = sprites(W / 1440)
         yy, xx = np.mgrid[0:H, 0:W]; r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H / 2) / (H / 2)) ** 2) / np.sqrt(2)
         self.vig = (1 - 0.32 * np.clip(r - 0.35, 0, 1) ** 1.5 / 0.65 ** 1.5)[..., None].astype(np.float32)
-        self.fx = sh.get("fx", [])
+        self.fx = list(sh.get("fx", []))
+        st, lt = sh.get("set", ""), sh.get("light", "")                 # ambient life layer (CLAUDE.md 5c.6)
+        if st in ("world2", "battle2", "wall3", "world", "battlements", "wall") and lt != "night": self.fx.append(dict(t="birds"))
+        if lt in ("golden", "dawn", "dusk", "interior") or st in ("chapel2", "toilet2", "gate2", "cut2"): self.fx.append(dict(t="motes"))
+        if st in ("world2", "world") and any(c.get("n") == "philip" for c in sh.get("chars", [])) or sh["id"] in ("s12", "s14"): self.fx.append(dict(t="smoke"))
         self.rng = random.Random(sh["id"])
 
     # camera window in overscan pixels
@@ -281,6 +285,27 @@ class Shot:
                         a = rg.uniform(math.pi * 1.05, math.pi * 1.95); sp = rg.uniform(120, 300) * W / 1440
                         x = P[0] + math.cos(a) * sp * v; y = P[1] + math.sin(a) * sp * v + 400 * v * v * W / 1440; rad = 12 * (1 - v * 0.5) * W / 1440
                         ImageDraw.Draw(img).ellipse([x - rad, y - rad, x + rad, y + rad], fill=(120, 190, 230, int(255 * (1 - v))))
+            elif k == "birds":
+                rg = random.Random(sum(map(ord, self.sh["id"])))
+                for j in range(5):
+                    y0 = rg.uniform(0.06, 0.3) * H; sp = rg.uniform(0.05, 0.12) * W; x = (rg.uniform(-0.2, 1.0) * W + sp * t) % (W * 1.3) - 0.15 * W
+                    y = y0 + 8 * math.sin(t * 2 + j); flap = math.sin(t * 14 + j * 2) * 0.6; sz = rg.uniform(10, 18) * W / 1440
+                    d = ImageDraw.Draw(img)
+                    d.line([(x - sz, y - sz * flap), (x, y), (x + sz, y - sz * flap)], fill=(30, 28, 32, 230), width=max(2, int(3 * W / 1440)))
+            elif k == "motes":
+                rg = random.Random(7 + len(self.sh["id"])); d = ImageDraw.Draw(img)
+                for j in range(22 if self.sh.get("set") in ("world2", "battle2", "wall3") else 40):
+                    x = (rg.uniform(0, W) + 12 * math.sin(t * 0.7 + j) * W / 1440 + 6 * t * W / 1440) % W
+                    y = (rg.uniform(0, H) - 10 * t * W / 1440 + 8 * math.cos(t * 0.5 + j)) % H
+                    r_ = rg.uniform(0.8, 2.0) * W / 1440; al = int(55 + 45 * math.sin(t * 2 + j))
+                    d.ellipse([x - r_, y - r_, x + r_, y + r_], fill=(255, 236, 190, max(0, al)))
+            elif k == "smoke":
+                rg = random.Random(21)
+                for j in range(6):
+                    x0 = rg.uniform(0.05, 0.95) * W; base = rg.uniform(0.45, 0.65) * H
+                    ph = (t * 0.18 + j / 6) % 1.0; rad = (40 + 140 * ph) * W / 1440; al = int(70 * (1 - ph))
+                    blob = Image.new("RGBA", (int(rad * 2) + 2,) * 2, (0, 0, 0, 0)); ImageDraw.Draw(blob).ellipse([0, 0, rad * 2, rad * 2], fill=(170, 165, 160, al))
+                    img.alpha_composite(blob.filter(ImageFilter.GaussianBlur(rad * 0.35)), (int(x0 + 40 * ph * W / 1440 - rad), int(base - ph * 0.35 * H - rad)))
             elif k == "arrow" and f.get("pt") in self.points:
                 P = to(self.points[f["pt"]]); sp = S["arrow_down" if f["dir"] == "down" else "arrow_up"]
                 pop = out_back(min(1, u / 0.15)); bob = 18 * math.sin(t * 6) * W / 1440

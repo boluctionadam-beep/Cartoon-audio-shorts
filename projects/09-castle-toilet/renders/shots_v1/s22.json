@@ -1,0 +1,49 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "bogis",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/bogis_disgusted_stand_+0.3_-0.4.png",
+   "baked": false,
+   "quad": [
+    [
+     -336.3,
+     917.9,
+     2.206
+    ],
+    [
+     1920.3,
+     917.9,
+     2.206
+    ],
+    [
+     1811.7,
+     4612.9,
+     2.441
+    ],
+    [
+     -227.7,
+     4612.9,
+     2.441
+    ]
+   ],
+   "dist": 2.89
+  }
+ ],
+ "points": {
+  "hole": [
+   2402.5,
+   -1788.3,
+   8.537
+  ],
+  "garderobe": [
+   2504.8,
+   -2440.3,
+   8.605
+  ]
+ }
+}

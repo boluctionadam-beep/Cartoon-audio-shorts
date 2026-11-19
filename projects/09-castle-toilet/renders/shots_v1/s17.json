@@ -1,0 +1,77 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "gaston",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/gaston_shocked_shrug_-0.4_-0.3.png",
+   "baked": false,
+   "quad": [
+    [
+     248.7,
+     1451.5,
+     7.477
+    ],
+    [
+     614.9,
+     1454.8,
+     7.652
+    ],
+    [
+     610.9,
+     2112.1,
+     7.486
+    ],
+    [
+     236.4,
+     2124.5,
+     7.31
+    ]
+   ],
+   "dist": 7.77
+  },
+  {
+   "name": "tibo",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/tibo_angry_hips_-0.6_+0.0.png",
+   "baked": false,
+   "quad": [
+    [
+     961.4,
+     1433.4,
+     6.636
+    ],
+    [
+     1385.2,
+     1428.7,
+     6.45
+    ],
+    [
+     1401.0,
+     2211.1,
+     6.284
+    ],
+    [
+     965.7,
+     2193.4,
+     6.469
+    ]
+   ],
+   "dist": 6.76
+  }
+ ],
+ "points": {
+  "hole": [
+   1273.4,
+   88.6,
+   9.143
+  ],
+  "garderobe": [
+   1311.8,
+   -193.4,
+   9.479
+  ]
+ }
+}

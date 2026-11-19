@@ -1,0 +1,38 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "richard",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/richard_laughing_arms_up_+0.0_+0.0.png",
+   "baked": false,
+   "quad": [
+    [
+     493.1,
+     1180.2,
+     5.264
+    ],
+    [
+     1155.9,
+     1179.7,
+     5.251
+    ],
+    [
+     1154.6,
+     2370.6,
+     5.27
+    ],
+    [
+     494.2,
+     2368.3,
+     5.282
+    ]
+   ],
+   "dist": 5.47
+  }
+ ],
+ "points": {}
+}

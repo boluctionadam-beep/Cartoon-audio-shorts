@@ -1,0 +1,38 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "richard",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/richard_shocked_shrug_+0.0_+0.4.png",
+   "baked": false,
+   "quad": [
+    [
+     512.5,
+     1187.0,
+     5.337
+    ],
+    [
+     1166.6,
+     1186.5,
+     5.318
+    ],
+    [
+     1162.8,
+     2355.6,
+     5.373
+    ],
+    [
+     515.3,
+     2352.2,
+     5.392
+    ]
+   ],
+   "dist": 5.57
+  }
+ ],
+ "points": {}
+}

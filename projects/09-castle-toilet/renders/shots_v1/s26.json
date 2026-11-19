@@ -1,0 +1,492 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "bogis",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/bogis_laughing_arms_up_+0.0_+0.0.png",
+   "baked": false,
+   "quad": [
+    [
+     -9.1,
+     1569.3,
+     6.346
+    ],
+    [
+     425.8,
+     1570.1,
+     6.624
+    ],
+    [
+     416.6,
+     2334.6,
+     6.462
+    ],
+    [
+     -30.1,
+     2368.1,
+     6.184
+    ]
+   ],
+   "dist": 6.93
+  },
+  {
+   "name": "x330",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra330_laughing_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     654.7,
+     1582.8,
+     18.695
+    ],
+    [
+     801.1,
+     1582.8,
+     18.726
+    ],
+    [
+     801.2,
+     1849.0,
+     18.564
+    ],
+    [
+     653.5,
+     1849.4,
+     18.533
+    ]
+   ],
+   "dist": 18.86
+  },
+  {
+   "name": "x331",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra331_determined_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     722.0,
+     1586.0,
+     35.159
+    ],
+    [
+     799.9,
+     1586.0,
+     35.174
+    ],
+    [
+     799.9,
+     1727.2,
+     35.012
+    ],
+    [
+     721.7,
+     1727.2,
+     34.997
+    ]
+   ],
+   "dist": 35.32
+  },
+  {
+   "name": "x332",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra332_laughing_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     853.4,
+     1585.8,
+     33.109
+    ],
+    [
+     936.2,
+     1585.8,
+     33.058
+    ],
+    [
+     936.9,
+     1736.0,
+     32.896
+    ],
+    [
+     853.7,
+     1735.8,
+     32.946
+    ]
+   ],
+   "dist": 33.26
+  },
+  {
+   "name": "x333",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra333_laughing_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     611.6,
+     1586.1,
+     35.922
+    ],
+    [
+     687.8,
+     1586.1,
+     35.992
+    ],
+    [
+     687.4,
+     1724.0,
+     35.83
+    ],
+    [
+     610.7,
+     1724.3,
+     35.76
+    ]
+   ],
+   "dist": 36.17
+  },
+  {
+   "name": "x334",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra334_angry_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     685.9,
+     1585.9,
+     34.26
+    ],
+    [
+     765.8,
+     1585.9,
+     34.293
+    ],
+    [
+     765.7,
+     1730.7,
+     34.131
+    ],
+    [
+     685.4,
+     1730.8,
+     34.098
+    ]
+   ],
+   "dist": 34.44
+  },
+  {
+   "name": "x335",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra335_laughing_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     559.8,
+     1585.6,
+     32.054
+    ],
+    [
+     645.4,
+     1585.7,
+     32.147
+    ],
+    [
+     644.7,
+     1740.2,
+     31.985
+    ],
+    [
+     558.7,
+     1740.6,
+     31.892
+    ]
+   ],
+   "dist": 32.35
+  },
+  {
+   "name": "x336",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra336_angry_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     667.2,
+     1585.5,
+     31.009
+    ],
+    [
+     755.4,
+     1585.5,
+     31.049
+    ],
+    [
+     755.3,
+     1745.5,
+     30.887
+    ],
+    [
+     666.5,
+     1745.7,
+     30.847
+    ]
+   ],
+   "dist": 31.19
+  },
+  {
+   "name": "x337",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra337_determined_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     884.4,
+     1583.9,
+     22.217
+    ],
+    [
+     1008.1,
+     1583.8,
+     22.141
+    ],
+    [
+     1009.7,
+     1808.7,
+     21.979
+    ],
+    [
+     885.0,
+     1807.9,
+     22.055
+    ]
+   ],
+   "dist": 22.36
+  },
+  {
+   "name": "x338",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra338_laughing_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     866.9,
+     1581.8,
+     16.454
+    ],
+    [
+     1034.0,
+     1581.8,
+     16.376
+    ],
+    [
+     1036.5,
+     1886.5,
+     16.214
+    ],
+    [
+     867.6,
+     1885.1,
+     16.292
+    ]
+   ],
+   "dist": 16.6
+  },
+  {
+   "name": "x339",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra339_determined_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     888.1,
+     1585.9,
+     34.18
+    ],
+    [
+     968.5,
+     1585.9,
+     34.113
+    ],
+    [
+     969.3,
+     1731.4,
+     33.951
+    ],
+    [
+     888.6,
+     1731.2,
+     34.018
+    ]
+   ],
+   "dist": 34.35
+  },
+  {
+   "name": "x340",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra340_angry_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     871.9,
+     1584.6,
+     25.556
+    ],
+    [
+     979.3,
+     1584.6,
+     25.49
+    ],
+    [
+     980.5,
+     1779.7,
+     25.328
+    ],
+    [
+     872.4,
+     1779.2,
+     25.394
+    ]
+   ],
+   "dist": 25.7
+  },
+  {
+   "name": "x341",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra341_determined_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     804.3,
+     1583.3,
+     20.163
+    ],
+    [
+     940.3,
+     1583.2,
+     20.123
+    ],
+    [
+     941.5,
+     1830.8,
+     19.961
+    ],
+    [
+     804.4,
+     1830.3,
+     20.001
+    ]
+   ],
+   "dist": 20.29
+  },
+  {
+   "name": "x342",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra342_angry_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     693.2,
+     1581.4,
+     15.547
+    ],
+    [
+     869.3,
+     1581.4,
+     15.552
+    ],
+    [
+     870.1,
+     1902.4,
+     15.39
+    ],
+    [
+     692.2,
+     1902.5,
+     15.385
+    ]
+   ],
+   "dist": 15.7
+  },
+  {
+   "name": "x343",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra343_determined_stand_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     588.1,
+     1584.8,
+     26.719
+    ],
+    [
+     690.6,
+     1584.8,
+     26.794
+    ],
+    [
+     690.0,
+     1770.4,
+     26.632
+    ],
+    [
+     586.8,
+     1770.9,
+     26.557
+    ]
+   ],
+   "dist": 26.95
+  },
+  {
+   "name": "x344",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra344_laughing_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     620.1,
+     1583.1,
+     19.673
+    ],
+    [
+     759.2,
+     1583.1,
+     19.724
+    ],
+    [
+     758.9,
+     1835.7,
+     19.562
+    ],
+    [
+     618.6,
+     1836.4,
+     19.511
+    ]
+   ],
+   "dist": 19.85
+  },
+  {
+   "name": "x345",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/extra345_determined_arms_up_FR.png",
+   "baked": false,
+   "quad": [
+    [
+     851.0,
+     1585.9,
+     34.224
+    ],
+    [
+     931.1,
+     1585.9,
+     34.175
+    ],
+    [
+     931.8,
+     1731.2,
+     34.013
+    ],
+    [
+     851.3,
+     1731.0,
+     34.061
+    ]
+   ],
+   "dist": 34.37
+  }
+ ],
+ "points": {
+  "gate": [
+   792.0,
+   1336.2,
+   15.784
+  ]
+ }
+}

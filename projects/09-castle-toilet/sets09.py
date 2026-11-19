@@ -151,7 +151,7 @@ def set_world(variant="normal", light="golden", camp=False, flags="english", sca
     S, SD = wall_mats(variant if variant in ("iron", "butter") else "normal")
     if variant in ("iron", "butter"):
         for o in bpy.data.objects:
-            if o.get("castle") and o.type == "MESH" and o.data.materials and o.data.materials[0].name.startswith("stone"):
+            if o.get("castle") and o.type == "MESH" and o.data.materials and o.data.materials[0].name.startswith(("stone", "v2_wall")):
                 o.data.materials[0] = S
     if breach:                                                             # knock a hole in the outer ring (facing the camp)
         for o in list(bpy.data.objects):
@@ -206,11 +206,21 @@ def _camp(trebuchet):
         x, y = cx + rg.uniform(-15, 15), cy + rg.uniform(-10, 10); sphere((x, y, world_h(x, y) + 0.5), 0.8, fire, (1, 1, 1.4), sub=2)
         point_light((x, y, world_h(x, y) + 2), 800, (1, 0.5, 0.2), 0.5)
     if trebuchet:
-        x, y = -62, -38; z = world_h(x, y); W = wood("treb")
-        box((x, y, z + 0.5), (6, 4, 1), W); box((x - 1.5, y, z + 4), (0.6, 0.6, 7), W); box((x + 1.5, y, z + 4), (0.6, 0.6, 7), W)
-        arm = box((x, y, z + 7.5), (0.5, 0.5, 13), W); arm.rotation_euler.y = math.radians(-55)
-        box((x - 4, y, z + 4.5), (2.2, 2.2, 2.2), flat("cw", (0.3, 0.3, 0.32), 0.8))
-        point("treb_tip", (x + 5.4, y, z + 11.3))
+        x, y = -62, -38; z = world_h(x, y); W = wood("treb"); IR = flat("trebiron", (0.12, 0.12, 0.13), 0.5, metal=0.8)
+        for sy in (-1.6, 1.6):                                             # base rails + A-frames
+            box((x, y + sy, z + 0.4), (8, 0.5, 0.5), W)
+            for sx in (-1.8, 1.8):
+                b = box((x + sx * 0.55, y + sy, z + 3.6), (0.4, 0.4, 7.0), W); b.rotation_euler.y = math.radians(-sx * 9)
+        for sx in (-3.6, 0, 3.6): box((x + sx, y, z + 0.4), (0.5, 3.7, 0.5), W)
+        ax = cyl((x, y, z + 7.0), 0.25, 3.8, IR, 12); ax.rotation_euler.x = math.radians(90)
+        arm = box((x + 1.2, y, z + 8.6), (0.45, 0.45, 13), W); arm.rotation_euler.y = math.radians(-58)
+        box((x - 3.6, y, z + 4.2), (2.4, 2.4, 2.4), W, 0.05); box((x - 3.6, y, z + 4.2), (2.5, 0.3, 2.5), IR)
+        for sy in (-2.1, 2.1):
+            for sx in (-3.2, 3.2):
+                bpy.ops.mesh.primitive_torus_add(major_radius=0.7, minor_radius=0.12, location=(x + sx, y + sy, z + 0.75), rotation=(math.radians(90), 0, 0)); bpy.context.object.data.materials.append(W)
+        rope = cyl((x + 5.8, y, z + 12.2), 0.04, 2.6, flat("trope", (0.6, 0.5, 0.3), 0.9), 6); rope.rotation_euler.y = math.radians(20)
+        sphere((x + 6.2, y, z + 11.0), 0.6, flat("boulder", (0.45, 0.43, 0.40), 0.9), sub=2, smooth=False)
+        point("treb_tip", (x + 6.2, y, z + 11.0))
 
 
 # ================================================================== BATTLEMENTS (wall-walk on top)

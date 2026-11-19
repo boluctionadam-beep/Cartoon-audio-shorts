@@ -1,0 +1,49 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "bogis",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/bogis_neutral_hold_spear_+0.0_+0.0.png",
+   "baked": false,
+   "quad": [
+    [
+     152.8,
+     1019.1,
+     2.921
+    ],
+    [
+     1431.2,
+     1019.1,
+     2.921
+    ],
+    [
+     1423.4,
+     3296.5,
+     2.956
+    ],
+    [
+     160.6,
+     3296.5,
+     2.956
+    ]
+   ],
+   "dist": 3.31
+  }
+ ],
+ "points": {
+  "hole": [
+   2427.2,
+   -1181.2,
+   7.198
+  ],
+  "garderobe": [
+   2506.9,
+   -1714.1,
+   7.356
+  ]
+ }
+}

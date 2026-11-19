@@ -237,6 +237,7 @@ class Rig:
             fim, fpiv = self.flag(); wav = 4 * math.sin(t * 7)
             fim2, fp2 = self._rot_sprite(fim, fpiv, wav)
             c.im.alpha_composite(fim2, (int(top[0] * S - fp2[0]), int(top[1] * S - fp2[1])))
+        self._held(c, t, sR, hR)
         self._arm(c, sR, hR, -1 if hR[1] > sR[1] else 1, arm, finger=P["finger"])
         # head
         blink = any(0 <= t - bt < 0.12 for bt in self.blink_times) and expr not in ("laughing",)
@@ -244,6 +245,32 @@ class Rig:
         him2, hp2 = self._rot_sprite(him, hpiv, P["hrot"] + P["brot"] * 0.6)
         c.im.alpha_composite(him2, (int((neck[0] + P["hdx"]) * S - hp2[0]), int((neck[1] + P["hdy"]) * S - hp2[1])))
         return c.im
+
+    def _held(self, c, t, s, h):
+        """small props held in the right hand"""
+        p = self.prop
+        if p == "shovel":
+            ang = math.atan2(h[1] - s[1], h[0] - s[0]) + 0.5; a0 = (h[0] - 140 * math.cos(ang), h[1] - 140 * math.sin(ang)); a1 = (h[0] + 300 * math.cos(ang), h[1] + 300 * math.sin(ang))
+            c.limb(a0, h, a1, 16, 14, (138, 96, 58, 255), outline=5)
+            bl = [(a1[0] + 60 * math.cos(ang + 1.57), a1[1] + 60 * math.sin(ang + 1.57)), (a1[0] - 60 * math.cos(ang + 1.57), a1[1] - 60 * math.sin(ang + 1.57)),
+                  (a1[0] + 110 * math.cos(ang) - 40 * math.cos(ang + 1.57), a1[1] + 110 * math.sin(ang) - 40 * math.sin(ang + 1.57)),
+                  (a1[0] + 110 * math.cos(ang) + 40 * math.cos(ang + 1.57), a1[1] + 110 * math.sin(ang) + 40 * math.sin(ang + 1.57))]
+            c.poly([bl[0], bl[1], bl[2], bl[3]], (60, 60, 66, 255))
+        elif p == "bowl":
+            c.shape(ellipse_pts(h[0], h[1] - 18, 70, 34, seed=5)[60:180] + [(h[0] - 70, h[1] - 18)], (130, 86, 50, 255), outline=9, shade=0.3, seed=5)
+            c.dot(h[0], h[1] - 30, 62, 10, (60, 36, 20, 255))
+        elif p == "goblet":
+            c.shape([(h[0] - 34, h[1] - 120), (h[0] + 34, h[1] - 120), (h[0] + 20, h[1] - 60), (h[0] + 6, h[1] - 50), (h[0] + 6, h[1] - 10), (h[0] + 26, h[1] + 4), (h[0] - 26, h[1] + 4), (h[0] - 6, h[1] - 10), (h[0] - 6, h[1] - 50), (h[0] - 20, h[1] - 60)],
+                    (236, 178, 52, 255), outline=8, var=0.2, shade=0.35, shade_col=(110, 60, 10), seed=6, hi=0.5)
+            c.dot(h[0], h[1] - 118, 30, 7, (120, 20, 40, 255))
+        elif p == "map":
+            c.shape([(h[0] - 40, h[1] - 150), (h[0] + 160, h[1] - 170), (h[0] + 170, h[1] + 10), (h[0] - 30, h[1] + 30)], (232, 214, 170, 255), outline=8, var=0.2, shade=0.25, seed=8)
+            c.limb((h[0] + 10, h[1] - 110), (h[0] + 70, h[1] - 60), (h[0] + 140, h[1] - 90), 6, 6, (160, 40, 40, 255))
+            c.limb((h[0] + 20, h[1] - 30), (h[0] + 80, h[1] - 70), (h[0] + 130, h[1] - 20), 6, 6, (60, 90, 160, 255))
+        elif p == "torch":
+            top = (h[0] + 20, h[1] - 240); c.limb((h[0] - 10, h[1] + 60), h, top, 16, 12, (110, 74, 44, 255), outline=5)
+            fl = 1 + 0.15 * math.sin(t * 23); c.shape(ellipse_pts(top[0], top[1] - 40 * fl, 34, 60 * fl, wobble=0.15, seed=int(t * 10) % 7), (255, 150, 40, 255), outline=0, shade=0, seed=2)
+            c.shape(ellipse_pts(top[0], top[1] - 30, 18, 34, wobble=0.1, seed=3), (255, 236, 160, 255), outline=0, shade=0, seed=3)
 
     def _arm(self, c, s, h, bend, w, finger=False):
         el, end = _ik(s, h, self.l_up, self.l_fore, bend)

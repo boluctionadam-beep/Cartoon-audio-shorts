@@ -1,0 +1,115 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "bogis",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/bogis_determined_arms_up_+0.0_-1.0.png",
+   "baked": false,
+   "quad": [
+    [
+     635.7,
+     673.6,
+     10.404
+    ],
+    [
+     946.7,
+     673.6,
+     10.404
+    ],
+    [
+     946.7,
+     1233.4,
+     10.404
+    ],
+    [
+     635.7,
+     1233.4,
+     10.404
+    ]
+   ],
+   "dist": 10.44
+  },
+  {
+   "name": "tibo",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/tibo_scared_arms_up_+0.0_-1.0.png",
+   "baked": false,
+   "quad": [
+    [
+     651.2,
+     1287.9,
+     10.506
+    ],
+    [
+     959.3,
+     1287.8,
+     10.5
+    ],
+    [
+     959.3,
+     1842.5,
+     10.5
+    ],
+    [
+     651.2,
+     1842.3,
+     10.506
+    ]
+   ],
+   "dist": 10.6
+  },
+  {
+   "name": "gaston",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/gaston_angry_arms_up_+0.0_-1.0.png",
+   "baked": false,
+   "quad": [
+    [
+     627.1,
+     1890.6,
+     10.603
+    ],
+    [
+     932.2,
+     1890.3,
+     10.608
+    ],
+    [
+     932.2,
+     2439.3,
+     10.608
+    ],
+    [
+     627.1,
+     2439.9,
+     10.603
+    ]
+   ],
+   "dist": 11.23
+  }
+ ],
+ "points": {
+  "seat": [
+   777.9,
+   182.0,
+   10.406
+  ],
+  "chute_bottom": [
+   791.2,
+   2740.8,
+   10.404
+  ],
+  "chute_top": [
+   791.2,
+   341.8,
+   10.404
+  ],
+  "moat": [
+   -794.3,
+   3273.8,
+   9.662
+  ]
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "philip",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/philip_smug_hips_+0.7_-0.6.png",
+   "baked": false,
+   "quad": [
+    [
+     568.3,
+     1861.1,
+     8.171
+    ],
+    [
+     994.7,
+     1861.3,
+     8.175
+    ],
+    [
+     1009.6,
+     2688.5,
+     7.614
+    ],
+    [
+     551.8,
+     2688.7,
+     7.61
+    ]
+   ],
+   "dist": 8.25
+  }
+ ],
+ "points": {
+  "castle": [
+   8.2,
+   1744.0,
+   94.476
+  ],
+  "keep_top": [
+   792.0,
+   1334.1,
+   116.826
+  ]
+ }
+}

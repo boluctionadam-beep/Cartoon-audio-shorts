@@ -1,0 +1,49 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "bogis",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/bogis_smug_stand_+0.6_+0.0.png",
+   "baked": false,
+   "quad": [
+    [
+     59.2,
+     1361.8,
+     5.475
+    ],
+    [
+     603.3,
+     1354.0,
+     5.679
+    ],
+    [
+     610.2,
+     2263.1,
+     5.895
+    ],
+    [
+     87.0,
+     2303.3,
+     5.691
+    ]
+   ],
+   "dist": 6.1
+  }
+ ],
+ "points": {
+  "floor_hole": [
+   346.4,
+   1910.3,
+   5.704
+  ],
+  "floor_hole_back": [
+   434.5,
+   1844.7,
+   6.237
+  ]
+ }
+}

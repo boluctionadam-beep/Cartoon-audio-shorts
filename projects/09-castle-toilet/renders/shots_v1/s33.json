@@ -1,0 +1,59 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "bogis",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/bogis_smug_arms_up_+0.0_-1.0.png",
+   "baked": false,
+   "quad": [
+    [
+     796.3,
+     1735.4,
+     13.634
+    ],
+    [
+     1016.0,
+     1737.2,
+     13.582
+    ],
+    [
+     1014.0,
+     2125.8,
+     13.706
+    ],
+    [
+     796.3,
+     2122.5,
+     13.758
+    ]
+   ],
+   "dist": 14.19
+  }
+ ],
+ "points": {
+  "seat": [
+   899.9,
+   361.9,
+   13.183
+  ],
+  "chute_bottom": [
+   904.8,
+   2189.0,
+   13.753
+  ],
+  "chute_top": [
+   909.3,
+   480.9,
+   13.222
+  ],
+  "moat": [
+   -190.5,
+   2586.0,
+   12.54
+  ]
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "size": [
+  1584,
+  2816
+ ],
+ "overscan": 1.1,
+ "cards": [
+  {
+   "name": "richard",
+   "img": "/home/user/Cartoon-audio-shorts/projects/09-castle-toilet/renders/cards/richard_smug_hips_+0.5_+0.0.png",
+   "baked": false,
+   "quad": [
+    [
+     498.1,
+     1189.6,
+     5.076
+    ],
+    [
+     1235.8,
+     1188.8,
+     5.049
+    ],
+    [
+     1232.5,
+     2511.2,
+     5.087
+    ],
+    [
+     500.3,
+     2505.0,
+     5.114
+    ]
+   ],
+   "dist": 5.32
+  }
+ ],
+ "points": {}
+}
