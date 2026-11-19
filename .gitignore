@@ -16,3 +16,4 @@ projects/*/work/*_time.txt
 projects/*/renders/shots/*.log
 projects/*/renders/shots/*.json
 projects/*/renders/tex/
+projects/*/final/*_master.mp4
