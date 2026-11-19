@@ -282,3 +282,26 @@ def dress_flag(sh):
             dx, dy = ob.location.x - loc[0], ob.location.y - loc[1]
             if math.hypot(dx, dy) < 90 and abs((math.atan2(dy, dx) - a0 + math.pi) % (2 * math.pi) - math.pi) < math.radians(30):
                 bpy.data.objects.remove(ob)
+
+
+def dress_gate_open(sh):
+    """s26/s27: the French camp seen through the open gate, a road, and panic litter in the courtyard foreground."""
+    from scene_kit import tree, wood, noisy
+    plane((0, 42, 0.0), (90, 70), S2.mat("ground")); plane((0, 40, 0.02), (6, 64), S2.mat("dirt"))
+    T1, T2 = flat("tentw3", (0.92, 0.90, 0.84), 0.9), flat("tentb3", (0.14, 0.24, 0.62), 0.8)
+    rg = random.Random(26)
+    for i, (x, y) in enumerate(((-9, 38), (8, 42), (-15, 55), (14, 58), (-5, 62), (4, 70), (-12, 72), (18, 75))):
+        cyl((x, y, 1.8), 2.4, 3.6, T1 if i % 2 else T2, 20, "tent", r2=0.0); cyl((x, y, 0.5), 2.45, 1.0, T2 if i % 2 else T1, 20, "tentb")
+    for (x, y) in ((-4.0, 30), (4.0, 33), (-7, 48), (9, 52)):
+        cyl((x, y, 2.5), 0.06, 5.0, PR.M("darkwood"), 8); PR.banner((x, y, 4.2), 0, 1.0, 1.8, "lilies", (30, 50, 150), (240, 200, 60))
+    TR, LF = wood("trunk"), noisy("leaf", (0.10, 0.28, 0.06), (0.25, 0.46, 0.10), 0.5, bump=0.3)
+    for i in range(10): tree(rg.choice([rg.uniform(-40, -20), rg.uniform(20, 40)]), rg.uniform(60, 100), 0, rg.uniform(1.6, 2.4), (TR, LF))
+    PR.campfire((10, 46, 0), 300); PR.cart((-6, 26, 0), 100, "sacks")
+    side = _cam_frame(sh)
+    for i, (u, v) in enumerate(((2.2, -0.9), (2.6, 0.95), (3.8, -1.4))):            # spilled sacks / dropped shield at the frame edges
+        x, y = side(u, v); s = sphere((x, y, 0.15), 0.4, PR.M("burlap"), (1.2, 0.9, 0.35), sub=3); s.rotation_euler.z = i
+    for i in range(5):                                                                # spears dropped by the fleeing defenders
+        x, y = side(rg.uniform(3.0, 6.5), rg.uniform(-1.6, 1.6))
+        sp = cyl((x, y, 0.08), 0.025, 2.4, PR.M("wood"), 6); sp.rotation_euler = (math.radians(90), 0, rg.uniform(0, 3.1))
+    x, y = side(4.5, 1.3); S2.place("wooden_bucket_01", (x, y, 0.05), 1.0, 1.0)
+    x, y = side(2.8, -1.35); PR.barrels((x, y, 0), 1, 0)
