@@ -304,8 +304,10 @@ class Shot:
                 for j in range(6):
                     x0 = rg.uniform(0.05, 0.95) * W; base = rg.uniform(0.45, 0.65) * H
                     ph = (t * 0.18 + j / 6) % 1.0; rad = (40 + 140 * ph) * W / 1440; al = int(70 * (1 - ph))
-                    blob = Image.new("RGBA", (int(rad * 2) + 2,) * 2, (0, 0, 0, 0)); ImageDraw.Draw(blob).ellipse([0, 0, rad * 2, rad * 2], fill=(170, 165, 160, al))
-                    img.alpha_composite(blob.filter(ImageFilter.GaussianBlur(rad * 0.35)), (int(x0 + 40 * ph * W / 1440 - rad), int(base - ph * 0.35 * H - rad)))
+                    pad = int(rad * 0.9) + 2                                   # room for the blur, otherwise the puff shows a square edge
+                    blob = Image.new("RGBA", (int(rad * 2) + 2 * pad,) * 2, (0, 0, 0, 0)); ImageDraw.Draw(blob).ellipse([pad, pad, pad + rad * 2, pad + rad * 2], fill=(170, 165, 160, al))
+                    bx, by = int(x0 + 40 * ph * W / 1440 - rad) - pad, int(base - ph * 0.35 * H - rad) - pad
+                    img.alpha_composite(blob.filter(ImageFilter.GaussianBlur(rad * 0.35)), (max(0, bx), max(0, by)), (max(0, -bx), max(0, -by)))
             elif k == "arrow" and f.get("pt") in self.points:
                 P = to(self.points[f["pt"]]); sp = S["arrow_down" if f["dir"] == "down" else "arrow_up"]
                 pop = out_back(min(1, u / 0.15)); bob = 18 * math.sin(t * 6) * W / 1440
