@@ -303,6 +303,27 @@ def build(sh):
     if loc[2] is None: loc[2] = gz(loc[0], loc[1]) + cm.get("dz", 1.7)
     dof = objs.get(cm["dof"]) if isinstance(cm.get("dof"), str) else cm.get("dof")
     camera(tuple(loc), cm.get("target"), cm.get("rot"), cm.get("lens", 24), cm.get("shift", (0, 0)), dof, cm.get("fstop", 2.8))
+    if sh["set"] == "world2" and loc[2] - gz(loc[0], loc[1]) < 6:          # foreground dressing near the camera (CLAUDE.md 5c.2)
+        import props as PR, sets09b as S2, random
+        from scene_kit import grid_ground, grass_field, scatter
+        tgt = cm.get("target") or (loc[0] + 1, loc[1] + 1, loc[2]); fx_, fy_ = tgt[0] - loc[0], tgt[1] - loc[1]; L_ = math.hypot(fx_, fy_) or 1; fx_, fy_ = fx_ / L_, fy_ / L_
+        rx_, ry_ = fy_, -fx_; cx_, cy_ = loc[0] + fx_ * 12, loc[1] + fy_ * 12
+        g = grid_ground(34, 50, S2.mat("ground"), lambda x, y: S.world_h(x, y) + 0.03, loc=(cx_, cy_, 0))
+        heroes = [(c["at"][0], c["at"][1]) for c in sh.get("chars", [])]
+        def keep(x, y):
+            u = (x - loc[0]) * fx_ + (y - loc[1]) * fy_; v = (x - loc[0]) * rx_ + (y - loc[1]) * ry_
+            return u < 2.5 or u > 26 or any(math.hypot(x - hx, y - hy) < 1.8 for hx, hy in heroes) or (abs(v) < 0.8)
+        grass_field(g, "grass_medium_01", 26000, lambda c: True, size=2.6)
+        side = lambda u, v: (loc[0] + fx_ * u + rx_ * v, loc[1] + fy_ * u + ry_ * v)
+        rg = random.Random(sum(map(ord, sh["id"])))
+        for i in range(14):
+            u = rg.uniform(2.8, 11); v = rg.choice([-1, 1]) * rg.uniform(0.9, 0.35 * u + 0.8)
+            x, y = side(u, v)
+            if keep(x, y): continue
+            k = rg.choice(["shrub", "rocks", "sack", "barrels", "crates", "hay", "shrub"])
+            PR.dress((x - 0.1, x + 0.1, y - 0.1, y + 0.1), 1, [k], z=S.world_h, seed=i)
+        for (u, v) in ((4.0, -2.6), (4.6, 2.9)):                                 # a fence post / bush right at the frame edges
+            x, y = side(u, v); PR.dress((x - 0.1, x + 0.1, y - 0.1, y + 0.1), 1, ["shrub"], z=S.world_h, seed=int(u * 10))
     for ob in list(bpy.data.objects):                                     # no tree in front of the lens
         if ob.get("tree") and math.hypot(ob.location.x - loc[0], ob.location.y - loc[1]) < 16:
             bpy.data.objects.remove(ob)
